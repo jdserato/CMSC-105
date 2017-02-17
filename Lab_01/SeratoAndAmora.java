@@ -1,13 +1,18 @@
+package Lab01;
+
 import java.util.*;
+
 /**
- * Created by Serato & Amora on 2/17/17.
+ * Created by Serato and Amora on 2/17/17.
  */
-public class InputGathering {
+public class SeratoAndAmora {
+
     public static void main(String[] args) {
+        ArrayList<String> sampleFrame = new ArrayList<>();
+        int N;
+        InputGathering gather = new InputGathering();
         Scanner sc = new Scanner(System.in);
         int choice;
-        int N;
-        ArrayList<String> sampleFrame;
         do {
             System.out.print("Basic Sampling Methods\n" +
                     "1. Simple Random Sampling\n" +
@@ -19,20 +24,18 @@ public class InputGathering {
         } while (choice < 1 || choice > 4);
 
         if (choice != 4) {
-            do {
-                System.out.print("Please enter the population size (N): ");
-                N = sc.nextInt();
-            } while (N < 0);
-
-            System.out.println("Please enter the members of the sampling frame: ");
-            sampleFrame = new ArrayList<>();
-            sc.nextLine(); // acts as precaution
-            for(int i = 1; i <= N; i++) {
-                System.out.print(i + ". ");
-                String newItem = sc.nextLine();
-                sampleFrame.add(newItem);
-            }
+            N = gather.getPopulation();
+            sampleFrame = gather.gather();
         }
 
+        switch (choice) {
+            case 1:
+                SimpleRandomSampling srs = new SimpleRandomSampling(sampleFrame);
+                ArrayList<String> sample = srs.getSample();
+                for(String name : sample) {
+                    System.out.println(name);
+                }
+                break;
+        }
     }
 }
