@@ -1,3 +1,5 @@
+package Lab01;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,7 +29,7 @@ public class SimpleRandomSampling {
         for (int i = 0; i < sampleSize;i++){
 
             do{
-                randomIndex = generateRandomNum(0,sampleFrame.size());
+                randomIndex = generateRandomNum(0,sampleFrame.size() - 1);
             }while (sample.contains(sampleFrame.get(randomIndex)));
 
             sample.add(sampleFrame.get(randomIndex));
@@ -37,9 +39,8 @@ public class SimpleRandomSampling {
     }
 
     public ArrayList<String> getSample(){
-        int sampleSize;
-        sampleSize = (int)(sampleFrame.size() * .2);
-        return getSample(sampleSize);
+        double sampleSize = sampleFrame.size() * .2;
+        return getSample((int) Math.ceil(sampleSize));
     }
 
     private int generateRandomNum(int min, int max){
