@@ -3,14 +3,16 @@ package Lab01;
 import java.util.*;
 
 /**
- * Created by Serato and Amora on 2/17/17.
+ * Created by Semora on February 18, 2017
  */
 public class SeratoAndAmora {
+    static InputAndOutput gather = new InputAndOutput();
 
     public static void main(String[] args) {
         ArrayList<String> sampleFrame = new ArrayList<>();
-        int N;
-        InputGathering gather = new InputGathering();
+        ArrayList<String> sample;
+        Sampling technique;
+        int N = 0, n;
         Scanner sc = new Scanner(System.in);
         int choice;
         do {
@@ -22,20 +24,60 @@ public class SeratoAndAmora {
                     "Please enter choice: ");
             choice = sc.nextInt();
         } while (choice < 1 || choice > 4);
-
+        
         if (choice != 4) {
-            N = gather.getPopulation();
             sampleFrame = gather.gather();
+            N = gather.getPopulation();
         }
-
         switch (choice) {
             case 1:
-                SimpleRandomSampling srs = new SimpleRandomSampling(sampleFrame);
-                ArrayList<String> sample = srs.getSample();
-                for(String name : sample) {
-                    System.out.println(name);
-                }
+                technique = new SimpleRandomSampling(sampleFrame);
                 break;
+            case 2:
+                technique = new SystematicSampling(sampleFrame);
+                break;
+            case 3:
+                technique = new StratifiedSampling(sampleFrame);
+                break;
+            default:
+                return;
         }
+        gather.printFrame(sampleFrame, "THE SAMPLING FRAME:");
+        if (technique instanceof NeedsSampleSize) {
+            System.out.print("Please enter the desired sample size (n): ");
+            n = sc.nextInt();
+            if (n >= N || n <= 0) {
+                System.out.println("Sorry but the sample size must be a positive integer or less than the population size." +
+                        " The default value will be used.\n");
+                sample = technique.getSample();
+            } else {
+                sample = technique.getSample(n);
+            }
+            gather.printFrame(sample, technique.getHeader());
+            main(null);
+        } else {
+            technique.getSample();
+        }
+
+        /*switch (choice) {
+            case 1:
+                SimpleRandomSampling srs = new SimpleRandomSampling(sampleFrame);
+                System.out.print("Please enter the desired sample size (n): ");
+                n = sc.nextInt();
+                if (n >= N || n <= 0) {
+                    System.out.println("Sorry but the sample size must be a positive integer or less than the population size." +
+                            " The default value will be used.\n");
+                    sample = srs.getSample();
+                } else {
+                    sample = srs.getSample(n);
+                }
+                gather.printFrame(sample, "RANDOM SAMPLE");
+                break;
+
+            case 2:
+                SystematicSampling ss = new SystematicSampling(sampleFrame);
+                System.out.print("Please enter the desired sample size (n): ");
+                n = sc.nextInt();
+        }*/
     }
 }

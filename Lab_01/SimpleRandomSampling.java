@@ -1,52 +1,26 @@
 package Lab01;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
- * Created by Amora & Serato on 2/17/17.
+ * Created by Semora on February 18, 2017
  */
-public class SimpleRandomSampling {
+class SimpleRandomSampling extends Sampling implements NeedsSampleSize{
 
-    private Random r;
-    private ArrayList<String> sampleFrame;
-    private int randomNumber;
-
-    public SimpleRandomSampling(){
-        r = new Random();
-
-        //default constructor
-    }
-    public SimpleRandomSampling(ArrayList<String> sampleFrame){
-        this.sampleFrame = sampleFrame;
-        r = new Random();
-
+    SimpleRandomSampling(ArrayList<String> sampleFrame) {
+        super(sampleFrame, "RANDOM SAMPLE");
     }
 
-    public ArrayList<String> getSample(int sampleSize){
-        ArrayList<String> sample = new ArrayList<String>();
+    public ArrayList<String> getSample(int sampleSize) {
+        ArrayList<String> sample = new ArrayList<>();
         int randomIndex;
-        for (int i = 0; i < sampleSize;i++){
-
-            do{
-                randomIndex = generateRandomNum(0,sampleFrame.size() - 1);
-            }while (sample.contains(sampleFrame.get(randomIndex)));
+        for (int i = 0; i < sampleSize; i++) {
+            do {
+                randomIndex = generateRandomNum(sampleFrame.size() - 1);
+            } while (sample.contains(sampleFrame.get(randomIndex)));
 
             sample.add(sampleFrame.get(randomIndex));
-
         }
         return sample;
     }
-
-    public ArrayList<String> getSample(){
-        double sampleSize = sampleFrame.size() * .2;
-        return getSample((int) Math.ceil(sampleSize));
-    }
-
-    private int generateRandomNum(int min, int max){
-        return r.nextInt((max - min) + 1) + min;
-
-    }
-
-
 }
