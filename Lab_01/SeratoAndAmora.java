@@ -57,6 +57,7 @@ public class SeratoAndAmora {
             main(null);
         } else {
             technique.getSample();
+            main(null);
         }
 
         /*switch (choice) {

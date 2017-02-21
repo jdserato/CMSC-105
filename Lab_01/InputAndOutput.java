@@ -15,6 +15,7 @@ class InputAndOutput {
     private int tabSize, maxLength;
     private ArrayList<String> sampleFrame;
     private Scanner sc = new Scanner(System.in);
+    private boolean numeric;
 
     ArrayList<String> gather() {
         do {
@@ -26,12 +27,11 @@ class InputAndOutput {
         sampleFrame = new ArrayList<>();
         sc.nextLine(); // acts as precaution
         BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader("input.in"));
+        //try {
+            //br = new BufferedReader(new FileReader("input.in"));
             for (int i = 1; i <= N; i++) {
-                /*System.out.print(i + ". ");
+                System.out.print(i + ". ");
                 String newItem = sc.nextLine();
-                System.out.println(newItem);
                 if (i == 1) {
                     numeric = !((newItem.charAt(0) >= 'A' && newItem.charAt(0) <= 'Z') || (newItem.charAt(0) >= 'a' && newItem.charAt(0) <= 'z'));
                 }
@@ -39,25 +39,28 @@ class InputAndOutput {
                 for (int j = 0; j < newItem.length(); j++) {
                     if (numeric) {
                         if (newItem.charAt(j) >= '0' && newItem.charAt(j) <= '9') {
-                            sampleFrame.add(newItem);
+                            //sampleFrame.add(newItem);
                         } else if (!error){
                             System.out.println("ERROR! Input must be numeric only!");
                             i--;
                             error = true;
                         }
                     } else {
-                        if ((newItem.charAt(j) >= 'A' && newItem.charAt(j) <= 'Z') || (newItem.charAt(j) >= 'a' && newItem.charAt(j) <= 'z')) {
-                            sampleFrame.add(newItem);
+                        if ((newItem.charAt(j) >= 'A' && newItem.charAt(j) <= 'Z') || (newItem.charAt(j) >= 'a' && newItem.charAt(j) <= 'z') || newItem.charAt(j) == ' ') {
+                            //sampleFrame.add(newItem);
                         } else if (!error){
                             System.out.println("ERROR! Input must be character data only!");
                             i--;
                             error = true;
                         }
                     }
-                }*/
-                sampleFrame.add(br.readLine());
+                }
+                if (!error) {
+                    sampleFrame.add(newItem);
+                }
+                //sampleFrame.add(br.readLine());
             }
-        } catch (IOException e) {
+        /*} catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -67,7 +70,7 @@ class InputAndOutput {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         return sampleFrame;
     }
 
