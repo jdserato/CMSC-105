@@ -1,17 +1,64 @@
 package Lab01;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 import static Lab01.SeratoAndAmora.gather;
 
 /**
- * Created by Semora on February 19, 2017
+ * Created by Serato & Amora on February 19, 2017
  */
 public class StratifiedSampling extends Sampling implements DoesntNeedSampleSize{
     StratifiedSampling(ArrayList<String> sampleFrame) {
         super(sampleFrame, "STRATIFIED SAMPLING");
     }
 
+    @Override
+    public ArrayList<String> getSample(int sampleSize) {
+        ArrayList<String>[] strata = new ArrayList[50];
+        float percentage;
+        ArrayList<String> heads = new ArrayList<>();
+
+        ArrayList<String> sample = new ArrayList<>();
+
+        for (String data: sampleFrame){
+            if (!heads.contains(data)){
+                heads.add(data);
+            }
+        }
+
+        Scanner forPercentage = new Scanner(System.in);
+
+        System.out.println("Please specify a percentage for each stratum: ");
+        percentage = forPercentage.nextFloat();
+        int i = 0;
+        for (String head: heads){
+            ArrayList<String> temp = new ArrayList<>();
+            for (String data: sampleFrame){
+                if (head.equals(data)){
+                    temp.add(data);
+                }
+            }
+            strata[i] = temp;
+            i++;
+            temp.clear();
+        }
+
+        //generating randomly
+
+        for (i = 0; strata[i] != null; i++){
+            SimpleRandomSampling sampleThis = new SimpleRandomSampling(strata[0]);
+            sample.addAll(sampleThis.getSample());
+        }
+
+        return sample;
+    }
+
+
+    /*
     @Override
     public ArrayList<String> getSample(int sampleSize) {
         ArrayList<String> sample;
@@ -59,4 +106,5 @@ public class StratifiedSampling extends Sampling implements DoesntNeedSampleSize
         }
         return  null;
     }
+    */
 }
