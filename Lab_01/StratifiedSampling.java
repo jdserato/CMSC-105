@@ -1,9 +1,11 @@
+package Lab01;
+
 import java.util.ArrayList;
 import java.lang.*;
 import java.util.Scanner;
 
 /**
- * Created by Mary Danielle C. Amora on 2/26/2017.
+ * Created by Serato & Amora on 2/26/2017.
  */
 public class StratifiedSampling extends Sampling{
 
