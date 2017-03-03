@@ -5,7 +5,7 @@ import java.lang.*;
 import java.util.Scanner;
 
 /**
- * Created by Serato & Amora on 2/26/2017.
+ * Created by Serato & Amora on 2/26/2017
  */
 public class StratifiedSampling extends Sampling{
 
@@ -36,7 +36,10 @@ public class StratifiedSampling extends Sampling{
         }
 
         System.out.println(); */
+        int z = 0;
         for (String s: unique){
+            z++;
+
             int i = 0;
             for (String str: sampleFrame){
                 if (s.equals(str)){
@@ -45,12 +48,14 @@ public class StratifiedSampling extends Sampling{
                 i++;
             }
             //printing
-            /*
-            System.out.print(s+" >> ");
+
+            System.out.println("Strata "+z+": ");
             for (String m: indices){
-                System.out.print(m+", ");
+
+                System.out.println("INDEX "+(Integer.parseInt(m)+1)+"\nElement: "+s+"");
+
             }
-            */
+            System.out.println();
 
             SimpleRandomSampling sampleThis = new SimpleRandomSampling(indices);
             sample.addAll(sampleThis.getSample((int)(Math.ceil(indices.size()*(percentage/100)))));
@@ -72,13 +77,12 @@ public class StratifiedSampling extends Sampling{
         System.out.println("Sample: ");
         for (String st: indices){
             int index = Integer.parseInt(st);
-            System.out.print("Index "+ (index + 1));
+            System.out.println("Index "+ (index + 1));
             sample.add(sampleFrame.get(index));
-            System.out.print(" = "+ sample.get(i)+"; ");
+            System.out.println("Element: "+sample.get(i)+"\n");
             i++;
         }
-        System.out.println();
-
+        //System.out.println();
 
         return sample;
     }

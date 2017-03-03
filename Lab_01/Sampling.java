@@ -15,7 +15,7 @@ public abstract class Sampling {
     Sampling(ArrayList<String> sampleFrame, String header) {
         this.sampleFrame = sampleFrame;
         this.header = header;
-        numeric = !(sampleFrame.get(0).charAt(0) >= 'A' && sampleFrame.get(0).charAt(0) <= 'z');
+        //numeric = !(sampleFrame.get(0).charAt(0) >= 'A' && sampleFrame.get(0).charAt(0) <= 'z');
         r = new Random();
     }
 

@@ -15,9 +15,9 @@ class InputAndOutput {
     private int tabSize, maxLength;
     private ArrayList<String> sampleFrame;
     private Scanner sc = new Scanner(System.in);
-    private boolean numeric;
 
     ArrayList<String> gather() {
+        boolean numeric = false;
         do {
             System.out.print("Please enter the population size (N): ");
             N = sc.nextInt();
@@ -27,27 +27,33 @@ class InputAndOutput {
         sampleFrame = new ArrayList<>();
         sc.nextLine(); // acts as precaution
         BufferedReader br = null;
-        //try {
-            //br = new BufferedReader(new FileReader("input.in"));
+        try {
+            br = new BufferedReader(new FileReader("input.in"));
             for (int i = 1; i <= N; i++) {
+                String newItem;
+                boolean error = false;
                 System.out.print(i + ". ");
-                String newItem = sc.nextLine();
-                if (i == 1) {
+                newItem = sc.nextLine();
+                if (newItem.length() == 0) {
+                    System.out.println("Please re-enter your entry.");
+                    i--;
+                    error = true;
+                }
+                else if (i == 1) {
                     numeric = !((newItem.charAt(0) >= 'A' && newItem.charAt(0) <= 'Z') || (newItem.charAt(0) >= 'a' && newItem.charAt(0) <= 'z'));
                 }
-                boolean error = false;
                 for (int j = 0; j < newItem.length(); j++) {
                     if (numeric) {
                         if (newItem.charAt(j) >= '0' && newItem.charAt(j) <= '9') {
-                            //sampleFrame.add(newItem);
+                            sampleFrame.add(newItem);
                         } else if (!error){
                             System.out.println("ERROR! Input must be numeric only!");
                             i--;
                             error = true;
                         }
                     } else {
-                        if ((newItem.charAt(j) >= 'A' && newItem.charAt(j) <= 'Z') || (newItem.charAt(j) >= 'a' && newItem.charAt(j) <= 'z') || newItem.charAt(j) == ' ') {
-                            //sampleFrame.add(newItem);
+                        if ((newItem.charAt(j) >= 'A' && newItem.charAt(j) <= 'Z') || (newItem.charAt(j) >= 'a' && newItem.charAt(j) <= 'z')) {
+                            sampleFrame.add(newItem);
                         } else if (!error){
                             System.out.println("ERROR! Input must be character data only!");
                             i--;
@@ -55,12 +61,12 @@ class InputAndOutput {
                         }
                     }
                 }
-                if (!error) {
-                    sampleFrame.add(newItem);
-                }
                 //sampleFrame.add(br.readLine());
+                if (!error) {
+                    sampleFrame.add(i + "");
+                }
             }
-        /*} catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -70,7 +76,7 @@ class InputAndOutput {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
         return sampleFrame;
     }
 
@@ -98,40 +104,24 @@ class InputAndOutput {
         }
     }
 
-    /*private void printIndex(ArrayList<String> frame) {
-        int i = 0;
-        for(; i < frame.size(); i++) {
-            if (i >= 9) {
-                System.out.print("Index " + (i + 1));
-            } else {
-                System.out.print("Index " + 0 + (i + 1));
-            }
-            for(int j = 0; j < tabSize; j++) {
-                System.out.print("\t");
-            }
-            if (i % 10 == 9) {
-                printItems(frame, i);
-            }
-        }
-        if (i % 10 != 9) {
-            printItems(frame, i);
-        }
-    }*/
-
     private void printItems(ArrayList<String> frame, int endPoint) {
         int startPoint;
-        if (endPoint % 10 == 9) {
-            startPoint = endPoint - 9;
-        } else {
-            startPoint = endPoint - (endPoint % 10);
-        }
-        if (endPoint == frame.size()) {
-            endPoint--;
-        }
+
+            if (endPoint % 20 >= 18) {
+                startPoint = endPoint - 18;
+            } else {
+                startPoint = endPoint - (endPoint % 20);
+            }
+            if (endPoint == frame.size()) {
+                endPoint--;
+            }
+            if (startPoint < 0) {
+                startPoint = 0;
+            }
         System.out.println();
-        for (int i = startPoint; i <= endPoint; i++) {
+        for (int i = startPoint; i <= endPoint;) {
             System.out.print(frame.get(i)/* + "\t"*/);
-            if (frame.get(i).length() % 4 != 0){
+            if (frame.get(i).length() % 4 != 0) {
                 System.out.print("\t");
             }
             for (int j = maxLength - frame.get(i).length(); j >= 4; j -= 4) {
@@ -140,35 +130,37 @@ class InputAndOutput {
             if (frame.get(i).length() < 4) {
                 System.out.print("\t\t");
             }
+            i += 2;
         }
         System.out.println("\n");
     }
 
     private void printIndex(ArrayList<String> sample) {
-        int i = 0;
-        for (String contestant : sample) {
-            for (int j = 0; j < sampleFrame.size(); j++) {
-                if (contestant.equals(sampleFrame.get(j))) {
-                    if (j >= 9) {
-                        System.out.print("Index " + (j + 1));
-                    } else {
-                        System.out.print("Index " + 0 + (j + 1));
-                    }
-                    for (int k = 0; k < tabSize; k++) {
-                        System.out.print("\t");
-                    }
-                    if (tabSize == 0) {
-                        System.out.print("\t");
-                    }
-                    if (i++ % 10 == 9) {
-                        printItems(sample, i - 1);
-                    }
-                    break;
+        int i = 1;
+        for(; i < sample.size(); i += 2) {
+            try {
+                if (Integer.parseInt(sample.get(i)) > 9) {
+                    System.out.print("Index " + sample.get(i));
+                } else {
+                    System.out.print("Index " + 0 + sample.get(i));
                 }
+            } catch (NumberFormatException e) {
+                System.out.print("Index " + 0 + sample.get(i));
             }
+
+            for (int k = 0; k < tabSize; k++) {
+                System.out.print("\t");
+            }
+            if (tabSize == 0) {
+                System.out.print("\t");
+            }
+            if (i % 20 >= 18) {
+                printItems(sample, i - 1);
+            }
+
         }
-        if (i % 10 != 9) {
-            printItems(sample, i);
+        if (i % 20 <= 19 && i % 20 > 1) {
+            printItems(sample, i - 1);
         }
     }
 

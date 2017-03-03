@@ -1,12 +1,13 @@
 package Lab01;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Created by Semora on February 18, 2017
  */
 public class SeratoAndAmora {
-    static InputAndOutput gather = new InputAndOutput();
+    private static InputAndOutput gather = new InputAndOutput();
 
     public static void main(String[] args) {
         ArrayList<String> sampleFrame = new ArrayList<>();
@@ -54,31 +55,14 @@ public class SeratoAndAmora {
                 sample = technique.getSample(n);
             }
             gather.printFrame(sample, technique.getHeader());
+            System.out.println("Press [ENTER] to continue.");
+            sc.nextLine();
+            sc.nextLine();
+            for(int i = 0; i < 10; i++)
+                System.out.println("\n");
             main(null);
         } else {
             technique.getSample();
-            main(null);
         }
-
-        /*switch (choice) {
-            case 1:
-                SimpleRandomSampling srs = new SimpleRandomSampling(sampleFrame);
-                System.out.print("Please enter the desired sample size (n): ");
-                n = sc.nextInt();
-                if (n >= N || n <= 0) {
-                    System.out.println("Sorry but the sample size must be a positive integer or less than the population size." +
-                            " The default value will be used.\n");
-                    sample = srs.getSample();
-                } else {
-                    sample = srs.getSample(n);
-                }
-                gather.printFrame(sample, "RANDOM SAMPLE");
-                break;
-
-            case 2:
-                SystematicSampling ss = new SystematicSampling(sampleFrame);
-                System.out.print("Please enter the desired sample size (n): ");
-                n = sc.nextInt();
-        }*/
     }
 }

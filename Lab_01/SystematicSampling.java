@@ -16,10 +16,10 @@ public class SystematicSampling extends Sampling implements NeedsSampleSize {
     public ArrayList<String> getSample(int sampleSize) {
         ArrayList<String> sample = new ArrayList<>();
         int k = sampleFrame.size() / sampleSize;
-        System.out.println(sampleFrame.size() + "/" + sampleSize);
-        int randomIndex = generateRandomNum(k - 1);
+        int randomIndex = generateRandomNum(k / 2 - 1) * 2;
         for (int i = 0, j = randomIndex; i < sampleSize; i++, j += k) {
             sample.add(sampleFrame.get(j));
+            sample.add("" + (j + 1));
         }
         return sample;
     }

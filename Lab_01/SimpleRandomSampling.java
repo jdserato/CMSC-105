@@ -16,10 +16,11 @@ class SimpleRandomSampling extends Sampling implements NeedsSampleSize{
         int randomIndex;
         for (int i = 0; i < sampleSize; i++) {
             do {
-                randomIndex = generateRandomNum(sampleFrame.size() - 1);
-            } while (sample.contains(sampleFrame.get(randomIndex)));
+                randomIndex = generateRandomNum((sampleFrame.size() - 1) / 2) * 2;
+            } while (sample.contains((randomIndex / 2 + 1)  + ""));
 
             sample.add(sampleFrame.get(randomIndex));
+            sample.add((randomIndex / 2 + 1) + "");
         }
         return sample;
     }
