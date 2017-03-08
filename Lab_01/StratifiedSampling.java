@@ -5,13 +5,14 @@ import java.lang.*;
 import java.util.Scanner;
 
 /**
- * Created by Serato & Amora on 2/26/2017.
+ * Created by Serato & Amora on 2/26/2017
  */
 public class StratifiedSampling extends Sampling{
 
     private ArrayList<String> sample = new ArrayList<>();
     private ArrayList<String> indices = new ArrayList<>();
     private ArrayList<String> unique = new ArrayList<>();
+    private ArrayList<String> population = new ArrayList<>();
 
     StratifiedSampling(ArrayList<String> sampleFrame) {
         super(sampleFrame, "STRATIFIED SAMPLE");
@@ -20,34 +21,38 @@ public class StratifiedSampling extends Sampling{
 
     @Override
     public ArrayList<String> getSample(int sampleSize) {
+
+        for(int i = 0; i < sampleFrame.size(); i += 2) {
+            population.add(sampleFrame.get(i));
+        }
         double percentage;
         Scanner scan = new Scanner(System.in);
         System.out.print("Percentage of elements you want from each stratum: ");
         percentage = scan.nextDouble();
-        for (String s: sampleFrame){
+        for (String s: population){
             if (!unique.contains(s)){
                 unique.add(s);
             }
         }
 
-       int num = 1;
+        int num = 1;
         for (String s: unique){
             int i = 0;
-            for (String str: sampleFrame){
+            for (String str: population){
                 if (s.equals(str)){
                     indices.add(i+"");
                 }
                 i++;
             }
 
-            System.out.println("Strata "+num+"\n");
+            System.out.println("STRATA "+ num);
             int z = 1;
 
             for (String index: indices){
                 if ((Integer.parseInt(index) + 1) < 10){
-                    System.out.print("INDEX 0"+(Integer.parseInt(index)+1)+"      ");
+                    System.out.print("Index 0"+(Integer.parseInt(index)+1)+"      ");
                 }else{
-                    System.out.print("INDEX "+(Integer.parseInt(index)+1)+"      ");
+                    System.out.print("Index "+(Integer.parseInt(index)+1)+"      ");
 
                 }
                 z++;
@@ -60,28 +65,24 @@ public class StratifiedSampling extends Sampling{
             System.out.println("\n");
 
             SimpleRandomSampling sampleThis = new SimpleRandomSampling(indices);
-            sample.addAll(sampleThis.getSample((int)(Math.ceil(indices.size()*(percentage/100)))));
+            sample.addAll(sampleThis.getSample(((int)(Math.ceil(indices.size()*(percentage/100)))),indices));
             num++;
             indices.clear();
 
         }
-
+        indices.clear();
         indices.addAll(sample);
         sample.clear();
-
         //printing the sample
-
-        int i = 0;
         System.out.println("\nSAMPLE: ");
         for (String st: indices){
             int index = Integer.parseInt(st);
-            if (index < 10){
+            if (index < 9){
                 System.out.print("INDEX 0"+ (index + 1)+"      ");
             }else{
                 System.out.print("INDEX "+ (index + 1)+"      ");
             }
-            sample.add(sampleFrame.get(index));
-            i++;
+            sample.add(population.get(index));
         }
         System.out.println();
         for (String string: sample){

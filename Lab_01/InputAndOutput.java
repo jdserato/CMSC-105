@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -13,55 +14,85 @@ import java.util.Scanner;
 class InputAndOutput {
     private int N;
     private int tabSize, maxLength;
-    private ArrayList<String> sampleFrame;
     private Scanner sc = new Scanner(System.in);
 
-    ArrayList<String> gather() {
-        boolean numeric = false;
+    ArrayList<String> gather(boolean manual) {
+        boolean numeric = false, error = false;
         do {
+            if (error) {
+                sc.nextLine();
+                for (int i = 0; i < 5; i++) {
+                    System.out.println();
+                }
+                System.out.println("Invalid input.");
+            }
             System.out.print("Please enter the population size (N): ");
-            N = sc.nextInt();
-        } while (N < 0);
+            try {
+                N = sc.nextInt();
+            } catch (InputMismatchException e) {
+                N = 0;
+                error = true;
+            }
+        } while (N <= 0);
 
-        System.out.println("Please enter the members of the sampling frame: ");
-        sampleFrame = new ArrayList<>();
+        ArrayList<String> sampleFrame = new ArrayList<>();
         sc.nextLine(); // acts as precaution
         BufferedReader br = null;
+        error = false;
+        if (manual) {
+            System.out.println("Please enter the members of the sampling frame: ");
+        }
         try {
             br = new BufferedReader(new FileReader("input.in"));
             for (int i = 1; i <= N; i++) {
                 String newItem;
-                boolean error = false;
-                System.out.print(i + ". ");
-                newItem = sc.nextLine();
+                if (manual) {
+                    error = false;
+                    System.out.print(i + ". ");
+                    newItem = sc.next();
+                } else {
+                    newItem = br.readLine();
+                }
                 if (newItem.length() == 0) {
-                    System.out.println("Please re-enter your entry.");
+                    if (manual) {
+                        System.out.println("Please re-enter your entry.");
+                    }
                     i--;
                     error = true;
-                }
-                else if (i == 1) {
+                } else if (i == 1) {
                     numeric = !((newItem.charAt(0) >= 'A' && newItem.charAt(0) <= 'Z') || (newItem.charAt(0) >= 'a' && newItem.charAt(0) <= 'z'));
                 }
                 for (int j = 0; j < newItem.length(); j++) {
                     if (numeric) {
                         if (newItem.charAt(j) >= '0' && newItem.charAt(j) <= '9') {
-                            sampleFrame.add(newItem);
-                        } else if (!error){
-                            System.out.println("ERROR! Input must be numeric only!");
+                            if (j + 1 == newItem.length()) {
+                                sampleFrame.add(newItem);
+                            }
+                        } else if (!error) {
+                            if (manual) {
+                                System.out.println("ERROR! Input must be numeric only!");
+                            }
                             i--;
                             error = true;
                         }
                     } else {
                         if ((newItem.charAt(j) >= 'A' && newItem.charAt(j) <= 'Z') || (newItem.charAt(j) >= 'a' && newItem.charAt(j) <= 'z')) {
-                            sampleFrame.add(newItem);
-                        } else if (!error){
-                            System.out.println("ERROR! Input must be character data only!");
+                            if (j + 1 == newItem.length()) {
+                                sampleFrame.add(newItem);
+                            }
+                        } else if (!error) {
+                            if (manual) {
+                                System.out.println("ERROR! Input must be character data only!");
+                            }
                             i--;
                             error = true;
                         }
                     }
                 }
-                //sampleFrame.add(br.readLine());
+                if (!manual && error) {
+                    System.out.println("An error has been found in your file. Please re-check the file and try again.");
+                    return null;
+                }
                 if (!error) {
                     sampleFrame.add(i + "");
                 }

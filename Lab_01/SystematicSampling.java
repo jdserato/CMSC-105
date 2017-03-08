@@ -19,7 +19,7 @@ public class SystematicSampling extends Sampling implements NeedsSampleSize {
         int randomIndex = generateRandomNum(k / 2 - 1) * 2;
         for (int i = 0, j = randomIndex; i < sampleSize; i++, j += k) {
             sample.add(sampleFrame.get(j));
-            sample.add("" + (j + 1));
+            sample.add("" + (j / 2 + 1));
         }
         return sample;
     }

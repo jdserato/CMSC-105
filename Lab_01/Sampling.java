@@ -10,19 +10,17 @@ public abstract class Sampling {
     private String header;
     private Random r;
     ArrayList<String> sampleFrame;
-    boolean numeric;
 
     Sampling(ArrayList<String> sampleFrame, String header) {
         this.sampleFrame = sampleFrame;
         this.header = header;
-        //numeric = !(sampleFrame.get(0).charAt(0) >= 'A' && sampleFrame.get(0).charAt(0) <= 'z');
         r = new Random();
     }
 
     public abstract ArrayList<String> getSample(int sampleSize);
 
     ArrayList<String> getSample(){
-        double sampleSize = sampleFrame.size() * .2;
+        double sampleSize = (sampleFrame.size() / 2) * .2;
         return getSample((int) Math.ceil(sampleSize));
     }
 
