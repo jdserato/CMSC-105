@@ -9,13 +9,15 @@ import java.util.*;
 
 class InputOutput {
     private Scanner sc = new Scanner(System.in);
+    ArrayList<String> list;
 
-    ArrayList<String> gatherInput() {
+    ArrayList<String> gatherInput(boolean numeric) {
         int inputSource = 0;
         String str;
-        ArrayList<String> list = new ArrayList<>();
-        boolean numeric = true;
+        list = new ArrayList<>();
         boolean error = false;
+
+
 
         // This loop will ask the user for the source of input.
         do {
@@ -47,35 +49,7 @@ class InputOutput {
             sc.nextLine();
 
             int i = 1;
-            // This loop will get the first datum and decide whether the data set is numerical or categorical.
-            do {
-                if (error) {
-                    error = false;
-                    i--;
-                    sc.nextLine();
-                    System.out.println("Please have at least one data.");
-                }
-                System.out.print(i++ + ". ");
-                str = sc.nextLine();
-                if (str.length() == 0) {
-                    error = true;
-                } else {
-                    for (int j = 0; j < str.length(); j++) {
-                        // The if-statement is an indication that the variable str is non-numeric.
-                        if (str.charAt(j) < '0' || str.charAt(j) > '9') {
-                            numeric = false;
-                            break;
-                        }
-
-                        if (j + 1 == str.length()) {
-                            numeric = true;
-                        }
-                    }
-                    list.add(str);
-                }
-            } while (error);
-
-            // This loop will collect the rest of the data.
+            // This loop will collect the data.
             while (true) {
                 if (error) {
                     error = false;
@@ -111,26 +85,6 @@ class InputOutput {
             try {
                 br = new BufferedReader(new FileReader("input.in"));
 
-                // The next 17 lines will get the first datum and decide whether the data set is numerical or categorical.
-                str = br.readLine();
-                if (str == null) {
-                    System.err.println("Error! Please re-check the file and try again.");
-                    return null;
-                } else {
-                    for (int i = 0; i < str.length(); i++) {
-                        // The if-statement is an indication that the variable str is non-numeric.
-                        if (str.charAt(i) < '0' || str.charAt(i) > '9') {
-                            numeric = false;
-                            break;
-                        }
-
-                        if (i + 1 == str.length()) {
-                            numeric = true;
-                        }
-                    }
-                    list.add(str);
-                }
-
                 // This loop will collect the rest of the data embedded in the file.
                 while ((str = br.readLine()) != null) {
                     if (numeric) {
@@ -159,5 +113,9 @@ class InputOutput {
         }
 
         return list;
+    }
+
+    void printFrequencyDistribution() {
+
     }
 }
