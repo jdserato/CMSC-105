@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * Created by Semora on March 19, 2017.
+ * Created by Semora on March 19, 2017
  */
 public class ViewSample extends JFrame{
     private JTable tblSample;
@@ -15,19 +15,26 @@ public class ViewSample extends JFrame{
     private JLabel lTitle;
     private JButton btnOK;
     private ArrayList<String> list;
+    private boolean categorical, integer;
 
-    ViewSample(ArrayList<String> list) {
+    ViewSample(ArrayList<String> list, String title, boolean categorical) {
         this.list = list;
+        lTitle.setText(title);
+        this.categorical = categorical;
         add(panel1);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("title");
         setSize(500, 500);
 
+
         btnOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                if (categorical) {
+                    Categorical ctr = new Categorical(list, title);
+                }
             }
         });
     }

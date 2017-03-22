@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import static java.awt.event.KeyEvent.VK_ENTER;
+import static java.awt.event.KeyEvent.VK_TAB;
 
 /**
  * Created by Semora on March 17, 2017
@@ -40,6 +41,7 @@ public class InputForm extends JFrame{
     private int size;
     private ArrayList<String> list;
     private boolean integer;
+    private boolean error = false;
 
     InputForm() {
         add(panel);
@@ -172,12 +174,12 @@ public class InputForm extends JFrame{
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == VK_ENTER) {
-                    if (taData.getText().equals("") || taData.getText().equals("\n")) {
-                        JOptionPane.showMessageDialog(panel, "Please enter a data.", "Error", JOptionPane.ERROR_MESSAGE);
+                    if (taData.getText().equals("") || taData.getText().equals("\n") || taData.getText().equals("\t")) {
+                        JOptionPane.showMessageDialog(panel, "Please enter a datum.", "Error", JOptionPane.ERROR_MESSAGE);
                         taData.setText("");
                     } else {
                         String str = taData.getText();
-                        if (index != 1) {
+                        if (str.charAt(0) == '\n' || str.charAt(0) == '\t') {
                             str = str.substring(1, str.length());
                         }
                         if (rbCategorical.isSelected()) {
@@ -189,19 +191,22 @@ public class InputForm extends JFrame{
                                     try {
                                         Double.parseDouble(str);
                                         integer = !str.contains(".");
+                                        error = false;
                                     } catch (NumberFormatException e2) {
                                         JOptionPane.showMessageDialog(panel, "Please enter a numerical value.", "Error", JOptionPane.ERROR_MESSAGE);
+                                        error = true;
                                     }
                                 }
-                                if (integer) {
-                                    int d = Integer.parseInt(str);
-                                    list.add(d + "");
+                                if (!error) {
+                                    if (integer) {
+                                        int d = Integer.parseInt(str);
+                                        list.add(d + "");
+                                    } else {
+                                        double d = Double.parseDouble(str);
+                                        list.add(d + "");
+                                    }
+                                    askData();
                                 }
-                                else {
-                                    double d = Double.parseDouble(str);
-                                    list.add(d + "");
-                                }
-                                askData();
                             } catch (NumberFormatException e2) {
                                 if (integer) {
                                     JOptionPane.showMessageDialog(panel, "Please input an integer.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -212,6 +217,9 @@ public class InputForm extends JFrame{
                         }
                         taData.setText("");
                     }
+                } else if (e.getKeyCode() == VK_TAB) {
+                    JOptionPane.showMessageDialog(panel, "Tab character is invalid.", "Error", JOptionPane.ERROR_MESSAGE);
+                    taData.setText("");
                 }
             }
 
@@ -225,7 +233,7 @@ public class InputForm extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                ViewSample vs = new ViewSample(list);
+                ViewSample vs = new ViewSample(list, tfTitle.getText(), rbCategorical.isSelected());
             }
         });
     }
