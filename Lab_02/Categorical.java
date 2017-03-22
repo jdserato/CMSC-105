@@ -2,6 +2,8 @@ package Lab02;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +14,9 @@ public class Categorical extends JFrame{
     private JTable tblCategory;
     private JPanel panel;
     private JLabel lblTitle;
+    private JButton viewPieChartButton;
+    private JPanel pieChartPanel;
+    private ArrayList<String> finalCounts;
 
     Categorical (ArrayList<String> list, String title) {
         this.list = list;
@@ -21,6 +26,14 @@ public class Categorical extends JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("title");
         setSize(500, 500);
+
+        viewPieChartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Charts(finalCounts, title);
+            }
+        });
 
     }
 
@@ -76,7 +89,7 @@ public class Categorical extends JFrame{
         }
         tblCategory.setValueAt("TOTAL: 100%", tblCategory.getRowCount() - 1, 1);
 
-        ArrayList<String> finalCounts = new ArrayList<>();
+        finalCounts = new ArrayList<>();
         for(int i = 0; i < sorted.size(); i++) {
             finalCounts.add(sorted.get(i));
             finalCounts.add(counter.get(i));
