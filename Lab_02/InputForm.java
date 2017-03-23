@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.awt.event.KeyEvent.VK_ENTER;
@@ -127,7 +130,67 @@ public class InputForm extends JFrame{
                     JOptionPane.showMessageDialog(panel, "Size must be positive integer.", "Error", JOptionPane.ERROR_MESSAGE);
                     tfSize.setText("");
                 } else {
-                    refocus(panel3, panel4);
+                    if (cbFile.isSelected()) {
+                        try {
+                            list = new ArrayList<>();
+                            error = false;
+                            BufferedReader br = new BufferedReader(new FileReader("input.in"));
+                            for (int i = 0; i < Integer.parseInt(tfSize.getText()); i++) {
+                                String sCurrLine;
+                                if ((sCurrLine = br.readLine()) != null) {
+                                    if (sCurrLine.equals("") || sCurrLine.equals("\n") || sCurrLine.equals("\t")) {
+                                        JOptionPane.showMessageDialog(panel, "File error. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                        error = true;
+                                        break;
+                                    } else {
+                                        if (sCurrLine.charAt(0) == '\n' || sCurrLine.charAt(0) == '\t') {
+                                            sCurrLine = sCurrLine.substring(1, sCurrLine.length());
+                                        }
+                                        if (rbCategorical.isSelected()) {
+                                            list.add(sCurrLine);
+                                        } else {
+                                            try {
+                                                if (index == 1) {
+                                                    try {
+                                                        Double.parseDouble(sCurrLine);
+                                                        integer = !sCurrLine.contains(".");
+                                                    } catch (NumberFormatException e2) {
+                                                        JOptionPane.showMessageDialog(panel, "File error. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                                        error = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (integer) {
+                                                    int d = Integer.parseInt(sCurrLine);
+                                                    list.add(d + "");
+                                                } else {
+                                                    double d = Double.parseDouble(sCurrLine);
+                                                    list.add(d + "");
+                                                }
+                                            } catch (NumberFormatException e2) {
+                                                JOptionPane.showMessageDialog(panel, "File error. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                                error = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(panel, "Size exceeds number of datum. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                    error = true;
+                                    break;
+                                }
+                            } if (!error) {
+                                refocus(panel3, panel5);
+                            } else {
+                                tfSize.setText("");
+                            }
+                        } catch (IOException e1) {
+                            JOptionPane.showMessageDialog(panel, "File is non-existent. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                            tfSize.setText("");
+                        }
+                    } else {
+                        refocus(panel3, panel4);
+                    }
                 }
             }
         });
@@ -152,7 +215,67 @@ public class InputForm extends JFrame{
                         JOptionPane.showMessageDialog(panel, "Size must be positive integer.", "Error", JOptionPane.ERROR_MESSAGE);
                         tfSize.setText("");
                     } else {
-                        refocus(panel3, panel4);
+                        if (cbFile.isSelected()) {
+                            try {
+                                list = new ArrayList<>();
+                                error = false;
+                                BufferedReader br = new BufferedReader(new FileReader("input.in"));
+                                for (int i = 0; i < Integer.parseInt(tfSize.getText()); i++) {
+                                    String sCurrLine;
+                                    if ((sCurrLine = br.readLine()) != null) {
+                                        if (sCurrLine.equals("") || sCurrLine.equals("\n") || sCurrLine.equals("\t")) {
+                                            JOptionPane.showMessageDialog(panel, "File error. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                            error = true;
+                                            break;
+                                        } else {
+                                            if (sCurrLine.charAt(0) == '\n' || sCurrLine.charAt(0) == '\t') {
+                                                sCurrLine = sCurrLine.substring(1, sCurrLine.length());
+                                            }
+                                            if (rbCategorical.isSelected()) {
+                                                list.add(sCurrLine);
+                                            } else {
+                                                try {
+                                                    if (index == 1) {
+                                                        try {
+                                                            Double.parseDouble(sCurrLine);
+                                                            integer = !sCurrLine.contains(".");
+                                                        } catch (NumberFormatException e2) {
+                                                            JOptionPane.showMessageDialog(panel, "File error. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                                            error = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (integer) {
+                                                        int d = Integer.parseInt(sCurrLine);
+                                                        list.add(d + "");
+                                                    } else {
+                                                        double d = Double.parseDouble(sCurrLine);
+                                                        list.add(d + "");
+                                                    }
+                                                } catch (NumberFormatException e2) {
+                                                    JOptionPane.showMessageDialog(panel, "File error. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                                    error = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(panel, "Size exceeds number of datum. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                        error = true;
+                                        break;
+                                    }
+                                } if (!error) {
+                                    refocus(panel3, panel5);
+                                } else {
+                                    tfSize.setText("");
+                                }
+                            } catch (IOException e1) {
+                                JOptionPane.showMessageDialog(panel, "File is non-existent. Please re-check the file and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                                tfSize.setText("");
+                            }
+                        } else {
+                            refocus(panel3, panel4);
+                        }
                     }
                 }
             }

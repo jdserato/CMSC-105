@@ -13,7 +13,7 @@ public class ViewSample extends JFrame{
     private JTable tblSample;
     private JPanel panel1;
     private JLabel lTitle;
-    private JButton btnOK;
+    private JButton btnViewSummary;
     private ArrayList<String> list;
     private boolean categorical, integer;
 
@@ -28,12 +28,14 @@ public class ViewSample extends JFrame{
         setSize(500, 500);
 
 
-        btnOK.addActionListener(new ActionListener() {
+        btnViewSummary.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 if (categorical) {
                     Categorical ctr = new Categorical(list, title);
+                } else {
+                    Numerical num = new Numerical(list, title);
                 }
             }
         });
@@ -42,7 +44,6 @@ public class ViewSample extends JFrame{
     private void createUIComponents() {
         tblSample = new JTable();
         int rows = (int) Math.ceil(Math.sqrt(list.size()));
-        System.out.println(rows);
         int cols = rows;
         if (rows * (rows - 1) >= list.size()) {
             cols--;
