@@ -26,6 +26,7 @@ public class Categorical extends JFrame{
 
     Categorical (ArrayList<String> list, String title) {
         this.list = list;
+        System.out.println(list);
         lblTitle.setText(title);
         add(panel);
         setVisible(true);
@@ -99,7 +100,7 @@ public class Categorical extends JFrame{
             }
         }
         ArrayList<String> counter = new ArrayList<>();
-        tblCategory.setValueAt("PERCENTAGE", 0, 1);
+        tblCategory.setValueAt("PERCENTAGE (based on " + list.size()+")", 0, 1);
         double n = list.size();
         for(int i = 0; i < count.size(); i++) {
             double ct = count.get(i);
@@ -118,6 +119,5 @@ public class Categorical extends JFrame{
             finalCounts.add(sorted.get(i));
             finalCounts.add(count.get(i) + "");
         }
-        System.out.println(finalCounts);
     }
 }
