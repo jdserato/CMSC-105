@@ -1,25 +1,41 @@
 package Lab02;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.general.DatasetGroup;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Semora on March 22, 2017
  */
 public class Numerical extends JFrame{
+    private ArrayList<String> list;
     private JPanel panel;
     private JTable tblNumerical;
     private JLabel lTitle;
     private JButton btnViewHist;
     private JPanel pnlHistogram;
-    private ArrayList<String> list;
+    private ArrayList<Double> histData = new ArrayList<>();
+    private double[] histogramChartData;
 
-    Numerical(ArrayList<String> list, String title) {
+    Numerical (ArrayList<String> list, String title) {
         this.list = list;
+        System.out.println(list);
         lTitle.setText(title);
         add(panel);
         setVisible(true);
@@ -28,13 +44,11 @@ public class Numerical extends JFrame{
         setSize(800, 500);
         pnlHistogram.setVisible(false);
 
-        // TODO implementation
-        btnViewHist.setEnabled(false);
         btnViewHist.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                {
-                }
+
+
             }
         });
     }
@@ -44,6 +58,9 @@ public class Numerical extends JFrame{
         // classification
         int maxDecimal = 0;
         ArrayList<Number> val;
+        list = ViewSample.getList();
+        histData = new ArrayList<>();
+        //System.out.println(list);
         if (list.get(0).contains(".")) {
             val = new ArrayList<>();
             for(String str : list) {
@@ -56,7 +73,6 @@ public class Numerical extends JFrame{
                     }
                 }
             }
-            System.out.println("maxDecimal is " + maxDecimal);
             for(int z = 0; z < list.size(); z++) {
                 String str = list.get(z);
                 for (int i = 0; i < str.length(); i++) {
@@ -68,7 +84,6 @@ public class Numerical extends JFrame{
                     }
                 }
             }
-            System.out.println(list);
         } else {
             val = new ArrayList<>();
             for (String str : list) {
@@ -158,7 +173,8 @@ public class Numerical extends JFrame{
                 tblNumerical.setValueAt(((Double.parseDouble(min1) - 0.5) + " - " + (Double.parseDouble(max1) + 0.5)), i, 1);
 
                 // midpoint
-                tblNumerical.setValueAt((Integer.parseInt(min1) + Integer.parseInt(max1)) / 2, i, 2);
+                tblNumerical.setValueAt((Double.parseDouble(min1) + Double.parseDouble(max1)) / 2, i, 2);
+                histData.add((Double.parseDouble(min1) + Double.parseDouble(max1)) / 2);
 
                 // frequency
                 int realLowLimit = Integer.parseInt(min1);
@@ -177,7 +193,7 @@ public class Numerical extends JFrame{
                 percent = ((double) count / list.size()) * 100;
                 cumulativePercent += percent;
                 DecimalFormat numberFormat = new DecimalFormat("#.00");
-
+                histData.add((double) count);
                 tblNumerical.setValueAt(count, i, 3);
                 tblNumerical.setValueAt(numberFormat.format(percent) + "%", i, 4);
                 tblNumerical.setValueAt(cumulativeCount, i, 5);
@@ -200,6 +216,7 @@ public class Numerical extends JFrame{
 
                 // midpoint
                 tblNumerical.setValueAt((Double.parseDouble(min1) + Double.parseDouble(max1)) / 2, i, 2);
+                histData.add((Double.parseDouble(min1) + Double.parseDouble(max1)) / 2);
 
                 // frequency
                 double realLowLimit = Double.parseDouble(min1);
@@ -217,6 +234,7 @@ public class Numerical extends JFrame{
                 cumulativePercent += percent;
                 DecimalFormat numberFormat = new DecimalFormat("#.00");
 
+                histData.add((double) count);
                 tblNumerical.setValueAt(count, i, 3);
                 tblNumerical.setValueAt(numberFormat.format(percent) + "%", i, 4);
                 tblNumerical.setValueAt(cumulativeCount, i, 5);
