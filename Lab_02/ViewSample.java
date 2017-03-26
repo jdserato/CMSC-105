@@ -2,6 +2,7 @@ package Lab02;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -14,11 +15,13 @@ public class ViewSample extends JFrame{
     private JPanel panel1;
     private JLabel lTitle;
     private JButton btnViewSummary;
-    private ArrayList<String> list;
+    static ArrayList<String> list;
     private boolean categorical, integer;
 
     ViewSample(ArrayList<String> list, String title, boolean categorical) {
         this.list = list;
+        this.setAlwaysOnTop(true);
+        setMaximumSize(new Dimension(500, 500));
         lTitle.setText(title);
         this.categorical = categorical;
         add(panel1);

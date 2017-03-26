@@ -89,18 +89,6 @@
               <text value="Quit"/>
             </properties>
           </component>
-          <component id="e5ce" class="javax.swing.JButton" binding="btnOK1">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="100" height="25"/>
-                <preferred-size width="100" height="25"/>
-                <maximum-size width="100" height="25"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value="OK"/>
-            </properties>
-          </component>
           <component id="458a0" class="javax.swing.JRadioButton" binding="rbCategorical">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
@@ -115,6 +103,18 @@
             </constraints>
             <properties>
               <text value="Use Existing File"/>
+            </properties>
+          </component>
+          <component id="e5ce" class="javax.swing.JButton" binding="btnOK1">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="100" height="25"/>
+                <preferred-size width="100" height="25"/>
+                <maximum-size width="100" height="25"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="OK"/>
             </properties>
           </component>
         </children>

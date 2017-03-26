@@ -46,13 +46,18 @@ public class InputForm extends JFrame{
     private boolean integer;
     private boolean error = false;
 
+
     InputForm() {
+        index = 1;
+        size = 0;
+        list = new ArrayList<>();
+        integer = false;
+        error = false;
         add(panel);
         panel2.setVisible(false);
         panel3.setVisible(false);
         panel4.setVisible(false);
         panel5.setVisible(false);
-
         setTitle(taMenuHeader.getText());
         setVisible(true);
         setSize(625, 450);
@@ -235,7 +240,7 @@ public class InputForm extends JFrame{
                                                 list.add(sCurrLine);
                                             } else {
                                                 try {
-                                                    if (index == 1) {
+                                                    if (index++ == 1) {
                                                         try {
                                                             Double.parseDouble(sCurrLine);
                                                             integer = !sCurrLine.contains(".");
@@ -355,8 +360,36 @@ public class InputForm extends JFrame{
         btnDone.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                //dispose();
                 ViewSample vs = new ViewSample(list, tfTitle.getText(), rbCategorical.isSelected());
+                list = new ArrayList<>();
+                panel1.setVisible(true);
+                btnOK1.setEnabled(false);
+                panel1.setEnabled(true);
+                panel2.setVisible(false);
+                panel3.setVisible(false);
+                panel4.setVisible(false);
+                panel5.setVisible(false);
+                panel.setEnabled(true);
+                for (Component c : panel.getComponents()) {
+                    if (c instanceof JPanel) {
+                        for (Component c1 : ((JPanel) c).getComponents()) {
+                            c1.setEnabled(true);
+                        }
+                    }
+                }
+                rbCategorical.setSelected(false);
+                rbNumerical.setSelected(false);
+                cbFile.setSelected(false);
+                tfSize.setText("");
+                tfTitle.setText("");
+                taData.setText("");
+                index = 1;
+                size = 0;
+                list = new ArrayList<>();
+                integer = false;
+                error = false;
+                askNature();
             }
         });
     }
@@ -390,6 +423,7 @@ public class InputForm extends JFrame{
     }
 
     private void askTitle() {
+        panel1.setEnabled(true);
         while (true) {
             try {
                 wait();
@@ -412,14 +446,9 @@ public class InputForm extends JFrame{
 
     private void askData() {
         if (++index > Integer.parseInt(tfSize.getText())) {
-            System.out.println(list);
             refocus(panel4, panel5);
         } else {
             lNum.setText(index + ". ");
         }
-    }
-
-    ArrayList<String> getList() {
-        return list;
     }
 }
