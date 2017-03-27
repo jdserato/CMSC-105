@@ -17,8 +17,12 @@ public class Numerical extends JFrame{
     private JButton btnViewHist;
     private JPanel pnlHistogram;
     private JButton btnMenu;
+    private JButton btnFirstCL;
+    private JButton btnLastCL;
     private ArrayList<String> list;
     DecimalFormat numberFormat;
+    private String actualFirst[] = new String[3];
+    private String actualLast[] = new String[3];
 
     Numerical(ArrayList<String> list, String title) {
         this.list = list;
@@ -30,12 +34,10 @@ public class Numerical extends JFrame{
         setSize(800, 500);
         pnlHistogram.setVisible(false);
 
-        // TODO implementation
-        btnViewHist.setEnabled(false);
         btnViewHist.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                // TODO implementation of histogram here
             }
         });
 
@@ -44,6 +46,65 @@ public class Numerical extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 SeratoAndAmora.in.show();
+            }
+        });
+
+        btnFirstCL.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (btnFirstCL.getText().equals("Collapse First Class Limit")) {
+                    actualFirst[0] = (String) tblNumerical.getValueAt(1, 0);
+                    actualFirst[1] = (String) tblNumerical.getValueAt(1, 1);
+                    actualFirst[2] = tblNumerical.getValueAt(1, 2).toString();
+                    String convert[] = {"", "", ""};
+                    for (int i = actualFirst[0].length() - 1; i >= 0; i--) {
+                        if (actualFirst[0].charAt(i) != ' ') {
+                            convert[0] = actualFirst[0].charAt(i) + convert[0];
+                        } else {
+                            break;
+                        }
+                    }
+                    convert[1] = (Double.parseDouble(convert[0]) + 0.5) + "";
+                    tblNumerical.setValueAt("<= " + convert[0], 1, 0);
+                    tblNumerical.setValueAt("<= " + convert[1], 1, 1);
+                    tblNumerical.setValueAt("-", 1, 2);
+                    btnFirstCL.setText("Undo Collapse First Class Limit");
+                } else {
+                    tblNumerical.setValueAt(actualFirst[0], 1, 0);
+                    tblNumerical.setValueAt(actualFirst[1], 1, 1);
+                    tblNumerical.setValueAt(actualFirst[2], 1, 2);
+                    btnFirstCL.setText("Collapse First Class Limit");
+                }
+            }
+        });
+
+        btnLastCL.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (btnLastCL.getText().equals("Collapse Last Class Limit")) {
+                    actualLast[0] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 0);
+                    actualLast[1] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 1);
+                    if ((tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString()) != null)
+                    actualLast[2] = tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString();
+                    String convert[] = {"", "", ""};
+                    for (int i = 0; i < actualLast[0].length(); i++) {
+                        if (actualLast[0].charAt(i) != ' ') {
+                            convert[0] = convert[0].concat(actualLast[0].charAt(i) + "");
+                        } else {
+                            break;
+                        }
+                    }
+                    convert[1] = (Double.parseDouble(convert[0]) - 0.5) + "";
+                    tblNumerical.setValueAt(">= " + convert[0], tblNumerical.getRowCount() - 2, 0);
+                    tblNumerical.setValueAt(">= " + convert[1], tblNumerical.getRowCount() - 2, 1);
+                    tblNumerical.setValueAt("-", tblNumerical.getRowCount() - 2, 2);
+                    btnLastCL.setText("Undo Collapse Last Class Limit");
+                } else {
+                    tblNumerical.setValueAt(actualLast[0], tblNumerical.getRowCount() - 2, 0);
+                    tblNumerical.setValueAt(actualLast[1], tblNumerical.getRowCount() - 2, 1);
+                    tblNumerical.setValueAt(actualLast[2], tblNumerical.getRowCount() - 2, 2);
+                    btnLastCL.setText("Collapse Last Class Limit");
+                }
             }
         });
     }
