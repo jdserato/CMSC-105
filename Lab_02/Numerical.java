@@ -1,7 +1,15 @@
 package Lab02;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.data.statistics.HistogramType;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -23,6 +31,9 @@ public class Numerical extends JFrame{
     DecimalFormat numberFormat;
     private String actualFirst[] = new String[3];
     private String actualLast[] = new String[3];
+    private double minimum;
+    private double maximum;
+    private int bins;
 
     Numerical(ArrayList<String> list, String title) {
         this.list = list;
@@ -38,6 +49,48 @@ public class Numerical extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO implementation of histogram here
+
+                if (btnViewHist.getText().equals("View Histogram")){
+                    HistogramDataset histDataset = new HistogramDataset();
+
+                    //sample
+
+                    double[] sampleData = new double[list.size()];
+                    for (int i = 0; i < list.size(); i++){
+                        sampleData[i] = Double.parseDouble(list.get(i));
+                    }
+                    //finding the min and max
+                    Double d = Double.parseDouble(list.get(0));
+                    minimum = d;
+                    maximum = d;
+                    for (String s: list){
+                        Double tempDouble = Double.parseDouble(s);
+                        if (minimum > tempDouble){
+                            minimum = tempDouble;
+                        }
+                        if (maximum < tempDouble){
+                            maximum = tempDouble;
+                        }
+                    }
+                    minimum = minimum - 1.0;
+                    maximum = maximum + 1.0;
+                    //TODO implement bins nga tarong
+                    double[] temp = {1.0,2.0,3.0,3.0,6.0,5.0,8.0,9.0,10.0,7.0};
+                    histDataset.addSeries(lTitle.getText(),sampleData,5,minimum,maximum);
+                    histDataset.setType(HistogramType.RELATIVE_FREQUENCY);
+
+                    JFreeChart histogramChart = ChartFactory.createHistogram(lTitle.getText(),"","",histDataset, PlotOrientation.VERTICAL,true,true,true);
+                    ChartPanel histogramChartPanel = new ChartPanel(histogramChart);
+                    pnlHistogram.removeAll();
+                    pnlHistogram.add(histogramChartPanel, BorderLayout.CENTER);
+                    pnlHistogram.validate();
+                    pnlHistogram.setVisible(true);
+                    btnViewHist.setText("Hide Histogram");
+                }else{
+                    pnlHistogram.setVisible(false);
+                    btnViewHist.setText("View Histogram");
+                }
+
             }
         });
 
@@ -85,7 +138,7 @@ public class Numerical extends JFrame{
                     actualLast[0] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 0);
                     actualLast[1] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 1);
                     if ((tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString()) != null)
-                    actualLast[2] = tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString();
+                        actualLast[2] = tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString();
                     String convert[] = {"", "", ""};
                     for (int i = 0; i < actualLast[0].length(); i++) {
                         if (actualLast[0].charAt(i) != ' ') {
