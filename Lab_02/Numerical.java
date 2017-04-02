@@ -75,8 +75,10 @@ public class Numerical extends JFrame{
                     minimum = minimum - 1.0;
                     maximum = maximum + 1.0;
                     //TODO implement bins nga tarong
+                    int binsFinal;
+                    binsFinal = (int)Math.ceil(1 + 3.322 * (Math.log(sampleData.length)/Math.log(2)));
                     double[] temp = {1.0,2.0,3.0,3.0,6.0,5.0,8.0,9.0,10.0,7.0};
-                    histDataset.addSeries(lTitle.getText(),sampleData,5,minimum,maximum);
+                    histDataset.addSeries(lTitle.getText(),sampleData,binsFinal,minimum,maximum);
                     histDataset.setType(HistogramType.RELATIVE_FREQUENCY);
 
                     JFreeChart histogramChart = ChartFactory.createHistogram(lTitle.getText(),"","",histDataset, PlotOrientation.VERTICAL,true,true,true);
