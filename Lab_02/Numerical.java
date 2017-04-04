@@ -109,7 +109,7 @@ public class Numerical extends JFrame{
                 actualLast[0] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 0);
                 actualLast[1] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 1);
                 if ((tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString()) != null)
-                actualLast[2] = tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString();
+                    actualLast[2] = tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString();
                 String convert[] = {"", "", ""};
                 for (int i = 0; i < actualLast[0].length(); i++) {
                     if (actualLast[0].charAt(i) != ' ') {
@@ -203,7 +203,19 @@ public class Numerical extends JFrame{
 
         int range = (int) Math.ceil(max.floatValue() - min.floatValue());
         int k = (int) Math.ceil(1 + (3.322 * Math.log10(list.size()))); // Sturge's Rule
-        int classWidth = (int) Math.ceil((float) range / (float) k);
+        float classWidth;
+        String maxD = "#.";
+        for (int i = 0; i < maxDecimal; i++) {
+            maxD = maxD.concat("0");
+        }
+        DecimalFormat numberFormat = new DecimalFormat(maxD);
+        if (maxDecimal == 0) {
+            classWidth = (int) Math.ceil((float) range / (float) k);
+        } else {
+            classWidth = (float) range / (float) k;
+            String str = numberFormat.format(classWidth);
+            classWidth = Float.parseFloat(str);
+        }
 
         tblNumerical.setModel(new DefaultTableModel(k + 2, 7));
 
@@ -216,16 +228,13 @@ public class Numerical extends JFrame{
         tblNumerical.setValueAt("C%", 0, 6);
         tblNumerical.setValueAt("n = " + list.size(), k + 1, 3);
         tblNumerical.setValueAt("TOTAL = 100%", k + 1, 4);
-        String maxD = "#.";
-        for (int i = 0; i < maxDecimal; i++) {
-            maxD = maxD.concat("0");
-        }
-        DecimalFormat numberFormat = new DecimalFormat(maxD);
+
         if (maxDecimal == 0) {
+            int classes = (int) classWidth;
             int lowestLimit = min.intValue();
             int highestLimit;
             if (classWidth != 0) {
-                highestLimit = min.intValue() + classWidth - 1;
+                highestLimit = min.intValue() + classes - 1;
             } else {
                 highestLimit = min.intValue();
             }
@@ -234,12 +243,13 @@ public class Numerical extends JFrame{
                 tblNumerical.setValueAt(lowestLimit + " - " + highestLimit, i, 0);
                 lowestLimit = highestLimit + 1;
                 if (classWidth != 0) {
-                    highestLimit = lowestLimit + classWidth - 1;
+                    highestLimit = lowestLimit + classes - 1;
                 } else {
                     highestLimit = lowestLimit;
                 }
             }
         } else {
+            System.out.println(list);
             String minimum = list.get(0);
             String maximum = minimum;
             for (String str : list) {
@@ -297,7 +307,7 @@ public class Numerical extends JFrame{
                 int real;
                 for (Number num : val) {
                     real = num.intValue();
-                    if (real >= realLowLimit && real <= realHighLimit) {
+                    if (real >= realLowLimit && real < realHighLimit) {
                         count++;
                         cumulativeCount++;
                     }
@@ -328,7 +338,7 @@ public class Numerical extends JFrame{
                 tblNumerical.setValueAt((numberFormat.format(Double.parseDouble(min1) - target) + " - " + numberFormat.format(Double.parseDouble(max1.concat("5")))), i, 1);
 
                 // midpoint
-                tblNumerical.setValueAt((Double.parseDouble(min1) + Double.parseDouble(max1)) / 2, i, 2);
+                tblNumerical.setValueAt(numberFormat.format((Double.parseDouble(min1) + Double.parseDouble(max1)) / 2), i, 2);
 
                 // frequency
                 double realLowLimit = Double.parseDouble(min1);
@@ -337,7 +347,7 @@ public class Numerical extends JFrame{
                 double percent;
                 for (Number num : val) {
                     double real = num.doubleValue();
-                    if (real >= realLowLimit && real <= realHighLimit) {
+                    if (real >= realLowLimit && real < realHighLimit || (realHighLimit == max.doubleValue() && real == realHighLimit)) {
                         cumulativeCount++;
                         count++;
                     }
