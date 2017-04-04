@@ -3,15 +3,14 @@ package Lab02;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.HistogramType;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -23,17 +22,14 @@ public class Numerical extends JFrame{
     private JTable tblNumerical;
     private JLabel lTitle;
     private JButton btnViewHist;
-    private JPanel pnlHistogram;
+    private JPanel pnlChart;
     private JButton btnMenu;
     private JButton btnFirstCL;
     private JButton btnLastCL;
     private ArrayList<String> list;
-    DecimalFormat numberFormat;
     private String actualFirst[] = new String[3];
     private String actualLast[] = new String[3];
-    private double minimum;
-    private double maximum;
-    private int bins;
+    private final double[] margin = {0.0, 0.0, -1.8, -2.700, -3.60, -4.53, -5.35, -6.2, -7.2, -8.2, -9.1};
 
     Numerical(ArrayList<String> list, String title) {
         this.list = list;
@@ -41,127 +37,121 @@ public class Numerical extends JFrame{
         add(panel);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("title");
-        setSize(800, 500);
-        pnlHistogram.setVisible(false);
+        setTitle("Presenting and Summarizing Data");
+        setSize(800, 700);
+        pnlChart.setVisible(false);
 
-        btnViewHist.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO implementation of histogram here
+        btnViewHist.addActionListener(e -> {
+            if (btnViewHist.getText().equals("View Histogram")) {
+                // USING BAR CHART
+                JFreeChart barChart = ChartFactory.createBarChart(null, "Midpoint", "Frequency", createDataset());
+                CategoryPlot plot = barChart.getCategoryPlot();
+                plot.setDomainGridlinesVisible(true);
 
-                if (btnViewHist.getText().equals("View Histogram")){
-                    HistogramDataset histDataset = new HistogramDataset();
 
-                    //sample
+                plot.getDomainAxis().setCategoryMargin(0.0);
+                ((BarRenderer) plot.getRenderer()).setItemMargin(margin[tblNumerical.getRowCount() - 3]);
+                ChartPanel chartPanel = new ChartPanel(barChart);
+                barChart.removeLegend();
+                pnlChart.removeAll();
+                pnlChart.add(chartPanel, BorderLayout.CENTER);
+                pnlChart.validate();
+                pnlChart.setSize(450, 500);
+                pnlChart.setVisible(true);
+                btnViewHist.setText("Hide Histogram");
+            } else {
+                pnlChart.setVisible(false);
+                btnViewHist.setText("View Histogram");
+            }
+        });
 
-                    double[] sampleData = new double[list.size()];
-                    for (int i = 0; i < list.size(); i++){
-                        sampleData[i] = Double.parseDouble(list.get(i));
+        btnMenu.addActionListener(e -> {
+            dispose();
+            SeratoAndAmora.in.setEnabled(true);
+            SeratoAndAmora.in.setFocusable(true);
+            SeratoAndAmora.in.show();
+        });
+
+        btnFirstCL.addActionListener(e -> {
+            if (btnFirstCL.getText().equals("Collapse First Class Limit")) {
+                actualFirst[0] = (String) tblNumerical.getValueAt(1, 0);
+                actualFirst[1] = (String) tblNumerical.getValueAt(1, 1);
+                actualFirst[2] = tblNumerical.getValueAt(1, 2).toString();
+                String convert[] = {"", "", ""};
+                for (int i = actualFirst[0].length() - 1; i >= 0; i--) {
+                    if (actualFirst[0].charAt(i) != ' ') {
+                        convert[0] = actualFirst[0].charAt(i) + convert[0];
+                    } else {
+                        break;
                     }
-                    //finding the min and max
-                    Double d = Double.parseDouble(list.get(0));
-                    minimum = d;
-                    maximum = d;
-                    for (String s: list){
-                        Double tempDouble = Double.parseDouble(s);
-                        if (minimum > tempDouble){
-                            minimum = tempDouble;
-                        }
-                        if (maximum < tempDouble){
-                            maximum = tempDouble;
-                        }
-                    }
-                    minimum = minimum - 1.0;
-                    maximum = maximum + 1.0;
-                    //TODO implement bins nga tarong
-                    int binsFinal;
-                    binsFinal = (int)Math.ceil(1 + 3.322 * (Math.log(sampleData.length)/Math.log(2)));
-                    double[] temp = {1.0,2.0,3.0,3.0,6.0,5.0,8.0,9.0,10.0,7.0};
-                    histDataset.addSeries(lTitle.getText(),sampleData,binsFinal,minimum,maximum);
-                    histDataset.setType(HistogramType.RELATIVE_FREQUENCY);
-
-                    JFreeChart histogramChart = ChartFactory.createHistogram(lTitle.getText(),"","",histDataset, PlotOrientation.VERTICAL,true,true,true);
-                    ChartPanel histogramChartPanel = new ChartPanel(histogramChart);
-                    pnlHistogram.removeAll();
-                    pnlHistogram.add(histogramChartPanel, BorderLayout.CENTER);
-                    pnlHistogram.validate();
-                    pnlHistogram.setVisible(true);
-                    btnViewHist.setText("Hide Histogram");
-                }else{
-                    pnlHistogram.setVisible(false);
-                    btnViewHist.setText("View Histogram");
                 }
-
-            }
-        });
-
-        btnMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                SeratoAndAmora.in.show();
-            }
-        });
-
-        btnFirstCL.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (btnFirstCL.getText().equals("Collapse First Class Limit")) {
-                    actualFirst[0] = (String) tblNumerical.getValueAt(1, 0);
-                    actualFirst[1] = (String) tblNumerical.getValueAt(1, 1);
-                    actualFirst[2] = tblNumerical.getValueAt(1, 2).toString();
-                    String convert[] = {"", "", ""};
-                    for (int i = actualFirst[0].length() - 1; i >= 0; i--) {
-                        if (actualFirst[0].charAt(i) != ' ') {
-                            convert[0] = actualFirst[0].charAt(i) + convert[0];
-                        } else {
-                            break;
-                        }
+                for (int i = actualFirst[1].length() - 1; i >= 0; i--) {
+                    if (actualFirst[1].charAt(i) != ' ') {
+                        convert[1] = actualFirst[1].charAt(i) + convert[1];
+                    } else {
+                        break;
                     }
-                    convert[1] = (Double.parseDouble(convert[0]) + 0.5) + "";
-                    tblNumerical.setValueAt("<= " + convert[0], 1, 0);
-                    tblNumerical.setValueAt("<= " + convert[1], 1, 1);
-                    tblNumerical.setValueAt("-", 1, 2);
-                    btnFirstCL.setText("Undo Collapse First Class Limit");
+                }
+                tblNumerical.setValueAt("<= " + convert[0], 1, 0);
+                tblNumerical.setValueAt("<= " + convert[1], 1, 1);
+                tblNumerical.setValueAt("-", 1, 2);
+                btnFirstCL.setText("Undo Collapse First Class Limit");
+            } else {
+                tblNumerical.setValueAt(actualFirst[0], 1, 0);
+                tblNumerical.setValueAt(actualFirst[1], 1, 1);
+                tblNumerical.setValueAt(actualFirst[2], 1, 2);
+                btnFirstCL.setText("Collapse First Class Limit");
+            }
+        });
+
+        btnLastCL.addActionListener(e -> {
+            if (btnLastCL.getText().equals("Collapse Last Class Limit")) {
+                actualLast[0] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 0);
+                actualLast[1] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 1);
+                if ((tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString()) != null)
+                actualLast[2] = tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString();
+                String convert[] = {"", "", ""};
+                for (int i = 0; i < actualLast[0].length(); i++) {
+                    if (actualLast[0].charAt(i) != ' ') {
+                        convert[0] = convert[0].concat(actualLast[0].charAt(i) + "");
+                    } else {
+                        break;
+                    }
+                }
+                for (int i = 0; i < actualLast[1].length(); i++) {
+                    if (actualLast[1].charAt(i) != ' ') {
+                        convert[1] = convert[1].concat(actualLast[1].charAt(i) + "");
+                    } else {
+                        break;
+                    }
+                }
+                tblNumerical.setValueAt(">= " + convert[0], tblNumerical.getRowCount() - 2, 0);
+                tblNumerical.setValueAt(">= " + convert[1], tblNumerical.getRowCount() - 2, 1);
+                tblNumerical.setValueAt("-", tblNumerical.getRowCount() - 2, 2);
+                btnLastCL.setText("Undo Collapse Last Class Limit");
+            } else {
+                tblNumerical.setValueAt(actualLast[0], tblNumerical.getRowCount() - 2, 0);
+                tblNumerical.setValueAt(actualLast[1], tblNumerical.getRowCount() - 2, 1);
+                tblNumerical.setValueAt(actualLast[2], tblNumerical.getRowCount() - 2, 2);
+                btnLastCL.setText("Collapse Last Class Limit");
+            }
+        });
+    }
+
+    private CategoryDataset createDataset() {
+        final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for(int i = 1; i < tblNumerical.getRowCount() - 1; i++) {
+            if (tblNumerical.getValueAt(i, 2).equals("-")) {
+                if (i == 1) {
+                    dataset.addValue((int) tblNumerical.getValueAt(i, 3), actualFirst[2], actualFirst[2]);
                 } else {
-                    tblNumerical.setValueAt(actualFirst[0], 1, 0);
-                    tblNumerical.setValueAt(actualFirst[1], 1, 1);
-                    tblNumerical.setValueAt(actualFirst[2], 1, 2);
-                    btnFirstCL.setText("Collapse First Class Limit");
+                    dataset.addValue((int) tblNumerical.getValueAt(i, 3), actualLast[2], actualLast[2]);
                 }
+            } else {
+                dataset.addValue((int) tblNumerical.getValueAt(i, 3), tblNumerical.getValueAt(i, 2).toString(), tblNumerical.getValueAt(i, 2).toString());
             }
-        });
-
-        btnLastCL.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (btnLastCL.getText().equals("Collapse Last Class Limit")) {
-                    actualLast[0] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 0);
-                    actualLast[1] = (String) tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 1);
-                    if ((tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString()) != null)
-                        actualLast[2] = tblNumerical.getValueAt(tblNumerical.getRowCount() - 2, 2).toString();
-                    String convert[] = {"", "", ""};
-                    for (int i = 0; i < actualLast[0].length(); i++) {
-                        if (actualLast[0].charAt(i) != ' ') {
-                            convert[0] = convert[0].concat(actualLast[0].charAt(i) + "");
-                        } else {
-                            break;
-                        }
-                    }
-                    convert[1] = (Double.parseDouble(convert[0]) - 0.5) + "";
-                    tblNumerical.setValueAt(">= " + convert[0], tblNumerical.getRowCount() - 2, 0);
-                    tblNumerical.setValueAt(">= " + convert[1], tblNumerical.getRowCount() - 2, 1);
-                    tblNumerical.setValueAt("-", tblNumerical.getRowCount() - 2, 2);
-                    btnLastCL.setText("Undo Collapse Last Class Limit");
-                } else {
-                    tblNumerical.setValueAt(actualLast[0], tblNumerical.getRowCount() - 2, 0);
-                    tblNumerical.setValueAt(actualLast[1], tblNumerical.getRowCount() - 2, 1);
-                    tblNumerical.setValueAt(actualLast[2], tblNumerical.getRowCount() - 2, 2);
-                    btnLastCL.setText("Collapse Last Class Limit");
-                }
-            }
-        });
+        }
+        return dataset;
     }
 
     private void createUIComponents() {
@@ -230,14 +220,24 @@ public class Numerical extends JFrame{
         for (int i = 0; i < maxDecimal; i++) {
             maxD = maxD.concat("0");
         }
-        numberFormat = new DecimalFormat(maxD);
+        DecimalFormat numberFormat = new DecimalFormat(maxD);
         if (maxDecimal == 0) {
             int lowestLimit = min.intValue();
-            int highestLimit = min.intValue() + classWidth - 1;
+            int highestLimit;
+            if (classWidth != 0) {
+                highestLimit = min.intValue() + classWidth - 1;
+            } else {
+                highestLimit = min.intValue();
+            }
+
             for (int i = 1; i <= k; i++) {
                 tblNumerical.setValueAt(lowestLimit + " - " + highestLimit, i, 0);
                 lowestLimit = highestLimit + 1;
-                highestLimit = lowestLimit + classWidth - 1;
+                if (classWidth != 0) {
+                    highestLimit = lowestLimit + classWidth - 1;
+                } else {
+                    highestLimit = lowestLimit;
+                }
             }
         } else {
             String minimum = list.get(0);
@@ -293,7 +293,7 @@ public class Numerical extends JFrame{
                 int realLowLimit = Integer.parseInt(min1);
                 int realHighLimit = Integer.parseInt(max1);
                 int count = 0;
-                double percent = 0;
+                double percent;
                 int real;
                 for (Number num : val) {
                     real = num.intValue();
@@ -334,7 +334,7 @@ public class Numerical extends JFrame{
                 double realLowLimit = Double.parseDouble(min1);
                 double realHighLimit = Double.parseDouble(max1);
                 int count = 0;
-                double percent = 0;
+                double percent;
                 for (Number num : val) {
                     double real = num.doubleValue();
                     if (real >= realLowLimit && real <= realHighLimit) {

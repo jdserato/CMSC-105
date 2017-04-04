@@ -2,10 +2,7 @@ package Lab02;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,7 +15,7 @@ import static java.awt.event.KeyEvent.VK_TAB;
  * Created by Semora on March 17, 2017
  */
 public class InputForm extends JFrame{
-    private JPanel panel;
+    JPanel panel;
     private JTextArea taMenuHeader;
     private JRadioButton rbCategorical;
     private JRadioButton rbNumerical;
@@ -216,8 +213,8 @@ public class InputForm extends JFrame{
                     } catch (NumberFormatException e1) {
                         error = true;
                     }
-                    if (error || size <= 0) {
-                        JOptionPane.showMessageDialog(panel, "Size must be positive integer.", "Error", JOptionPane.ERROR_MESSAGE);
+                    if (error || size <= 1) {
+                        JOptionPane.showMessageDialog(panel, "Size must be greater than 1.", "Error", JOptionPane.ERROR_MESSAGE);
                         tfSize.setText("");
                     } else {
                         if (cbFile.isSelected()) {
@@ -360,9 +357,6 @@ public class InputForm extends JFrame{
         btnDone.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //dispose();
-                ViewSample vs = new ViewSample(list, tfTitle.getText(), rbCategorical.isSelected());
-                list = new ArrayList<>();
                 panel1.setVisible(true);
                 btnOK1.setEnabled(false);
                 panel1.setEnabled(true);
@@ -370,7 +364,16 @@ public class InputForm extends JFrame{
                 panel3.setVisible(false);
                 panel4.setVisible(false);
                 panel5.setVisible(false);
-                panel.setEnabled(true);
+                panel1.setEnabled(false);
+                index = 1;
+                lNum.setText("1.");
+                size = 0;
+                integer = false;
+                error = false;
+
+                new ViewSample(list, tfTitle.getText(), rbCategorical.isSelected());
+                list = new ArrayList<>();
+
                 for (Component c : panel.getComponents()) {
                     if (c instanceof JPanel) {
                         for (Component c1 : ((JPanel) c).getComponents()) {
@@ -384,12 +387,8 @@ public class InputForm extends JFrame{
                 tfSize.setText("");
                 tfTitle.setText("");
                 taData.setText("");
-                index = 1;
-                size = 0;
-                list = new ArrayList<>();
-                integer = false;
-                error = false;
-                askNature();
+                //SeratoAndAmora.in.setFocusable(false);
+                SeratoAndAmora.in.setEnabled(false);
             }
         });
     }

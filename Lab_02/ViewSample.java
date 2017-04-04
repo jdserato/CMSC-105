@@ -27,7 +27,7 @@ public class ViewSample extends JFrame{
         add(panel1);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("title");
+        setTitle("Presenting and Summarizing Data");
         setSize(500, 500);
 
 

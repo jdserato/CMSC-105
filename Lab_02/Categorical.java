@@ -8,8 +8,6 @@ import org.jfree.data.general.DefaultPieDataset;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -31,41 +29,37 @@ public class Categorical extends JFrame{
         add(panel);
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setTitle("title");
-        setSize(500, 500);
+        setTitle("Presenting and Summarizing Data");
+        setSize(800, 700);
         pnlChart.setVisible(false);
 
-        btnViewChart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (btnViewChart.getText().equals("View Pie Chart")) {
-                    DefaultPieDataset pieChartData = new DefaultPieDataset();
-                    for (int i = 0; i < finalCounts.size(); i = i + 2) {
-                        pieChartData.setValue(finalCounts.get(i), ((int) Double.parseDouble(finalCounts.get(i + 1))));
-                    }
-
-                    JFreeChart pieChart = ChartFactory.createPieChart3D(title, pieChartData, true, true, true);
-                    pieChart.getPlot();
-
-                    ChartPanel pieChartPanel = new ChartPanel(pieChart);
-                    pnlChart.removeAll();
-                    pnlChart.add(pieChartPanel, BorderLayout.CENTER);
-                    pnlChart.validate();
-                    pnlChart.setVisible(true);
-                    btnViewChart.setText("Hide Pie Chart");
-                } else {
-                    pnlChart.setVisible(false);
-                    btnViewChart.setText("View Pie Chart");
+        btnViewChart.addActionListener(e -> {
+            if (btnViewChart.getText().equals("View Pie Chart")) {
+                DefaultPieDataset pieChartData = new DefaultPieDataset();
+                for (int i = 0; i < finalCounts.size(); i = i + 2) {
+                    pieChartData.setValue(finalCounts.get(i), ((int) Double.parseDouble(finalCounts.get(i + 1))));
                 }
+
+                JFreeChart pieChart = ChartFactory.createPieChart3D(null, pieChartData, true, true, true);
+                pieChart.getPlot();
+
+                ChartPanel pieChartPanel = new ChartPanel(pieChart);
+                pnlChart.removeAll();
+                pnlChart.add(pieChartPanel, BorderLayout.CENTER);
+                pnlChart.validate();
+                pnlChart.setVisible(true);
+                btnViewChart.setText("Hide Pie Chart");
+            } else {
+                pnlChart.setVisible(false);
+                btnViewChart.setText("View Pie Chart");
             }
         });
 
-        btnMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                SeratoAndAmora.in.show();
-            }
+        btnMenu.addActionListener(e -> {
+            dispose();
+            SeratoAndAmora.in.setEnabled(true);
+            SeratoAndAmora.in.setFocusable(true);
+            SeratoAndAmora.in.show();
         });
     }
 
@@ -85,7 +79,7 @@ public class Categorical extends JFrame{
                     tempStr = sorted.get(i);
                     sorted.set(i, sorted.get(i + 1));
                     sorted.set(i + 1, tempStr);
-                }
+                   }
             }
         }
 
@@ -96,8 +90,8 @@ public class Categorical extends JFrame{
         }
         ArrayList<Integer> count = new ArrayList<>(sorted.size());
         for(int i = 0; i < sorted.size(); i++) {
-            for (int j = 0; j < list.size(); j++) {
-                if (sorted.get(i).equals(list.get(j))) {
+            for (String aList : list) {
+                if (sorted.get(i).equals(aList)) {
                     if (count.size() == i) {
                         count.add(1);
                     } else {
