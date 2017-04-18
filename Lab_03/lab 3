@@ -1,0 +1,65 @@
+CMSC 105 Laboratory Activity 3
+Measures of Central Tendency and Dispersion
+
+Objective:	To demonstrate the knowledge in summarizing and describing quantitative data by measures of central tendency (i.e. average), and to assess the spread of data by measures of dispersion both for ungrouped and grouped data implemented through automated computation; and, to practice interpreting the summary measures as output.
+
+Instructions:	The exercise should be accomplished in pairs – peer learning approach. You choose your own partner/team-mate in the same lab section where you belong.
+	To log-in to the shared network storage drive where you will save your program files (executable and source code files), execute the ‘Run’ command in Windows and type the following in the next prompt: ’ \\172.17.1.58\[type your Campus ID here]. Then, click ‘OK’. In the next prompt, type your ‘Campus ID’ again for your password.
+		To access the ‘Faculty Postings’ folder where the lab exercises are saved under the CMSC105 sub-folder, execute the ‘Run’ command again in Windows and type the following in the next prompt: ‘\\172.17.1.58\faculty_postings’.
+	Name your program files as StudentIDAnsLab3.??? (with file extension depending on type of file your creating - ‘.EXE’ for executable file and ‘.C’  or ‘.java’ for source code file, for example). 
+
+
+EXERCISE 3:	Write a program, either in C- or Java programming language, which automates the computation for the measures of central tendency (mean, median, and mode) and the corresponding measures of dispersion (range, variance-standard deviation, and coefficient of variation) with the option to input a brief interpretation of the output. Specifically, the following requirements must be met:
+
+1. Program displays a menu where the heading should be: ‘Descriptive Statistics’. Menu items are the following: 1) ‘Ungrouped Data’, 2) ‘Grouped Data’, and 3) ‘Quit’. The system only accepts numeric data, either integer or floating point data types, but not both in the same dataset;
+2. After the user selects a menu item, except for ‘Quit’, the program asks the user to input a brief description about the data to be entered;
+3. If user’s choice is
+3.1. 	“Ungrouped Data”
+3.1.1. User enters the raw data set until the user enters a terminating character (or stops when the required number of inputs are met);
+3.1.2. Program displays dataset in the order as inputted (and indexed properly) with the brief description as title heading;
+3.1.3. System asks user either to ‘Continue’ or to ‘Edit’ specific entry(ies) in the dataset;
+3.1.3.1. If user chooses ‘Continue’, program asks user to input what measures of central tendency to calculate. User’s choices are: a) Mean, b) Median, c) Mode, or d) all measures;
+3.1.3.1.1. For ‘Mean’, corresponding Variance-Standard Deviation calculations should be displayed side-by-side with the mean;
+3.1.3.1.2. For ‘Median’, sort data first. Then, compute the Range and display side-by-side with the median;
+3.1.3.1.3. For ‘Mode’, display Mode value(s) with the following accompanying comment whichever applies:
+3.1.3.1.3.1.1. 1 mode – “unimodal”;
+3.1.3.1.3.1.2. 2 modes – “bimodal”;
+3.1.3.1.3.1.3. ≥ 3 modes – “multimodal”;
+3.1.3.1.3.1.4. No mode value – “no mode”;
+3.1.3.2. Else ‘Edit’, system performs data edit(s);
+
+3.2. 	“Grouped Data”
+3.2.1. Program asks for the total number of class intervals;
+3.2.2. System asks the user to confirm if there is(are) open-ended class interval(s);
+3.2.3. If ‘NO’ (i.e. close-ended intervals only)
+3.2.3.1. User enters the class limits and the corresponding frequencies in the following column order: lower class limit, upper class limit, and frequency, for each class interval;
+3.2.3.2. System asks user either to ‘Continue’ or to ‘Edit’ specific class interval entry(ies);
+3.2.3.3. If user opts to ‘Continue;
+3.2.3.3.1. Complete computation table starting with the fourth column where the system displays automatically the following calculated columns for each class intervals: the ‘Class Marks (xi)’, the ‘Cross-product of Class Mark and corresponding Frequency’ (fixi), and the ‘Cross-product of the Frequency and the Square of corresponding Class Mark’ (fixi2). Display totals for the Frequency (n), Cross-products ∑fixi and ∑ (fixi2);
+3.2.3.3.2. Program asks user to input what measures of central tendency to calculate. User choices are: a) Mean, b) Median, c) Mode, or d) all measures;
+3.2.3.3.2.1. For ‘Mean’, corresponding Variance-Standard Deviation calculations should be displayed side-by-side with the mean;
+3.2.3.3.2.2. For ‘Median’, display “Median not computed”;
+3.2.3.3.2.3. For ‘Mode’, display Modal class(es) with the following accompanying comment whichever applies:
+3.2.3.3.2.3.1. 1 modal class – “unimodal”;
+3.2.3.3.2.3.2. 2 modal classes – “bimodal”;
+3.2.3.3.2.3.3. ≥ 3 modal classes – “multimodal”;
+3.2.3.3.2.3.4. No modal class – “no mode”;
+3.2.3.4. Else ‘Edit’, system performs edit(s) in specified class interval(s);
+3.2.4. Else ‘YES’ (i.e. with open-ended class interval(s))
+3.2.4.1. User must specify which class interval is open-ended: first, last, or both. For first class intervals, the value label must be preceded by ‘≤’, while for the last class interval, ‘≥’ precedes the value;
+3.2.4.2. User enters the class limits and the corresponding frequencies for the middle class intervals according to the following column order: lower class limit, upper class limit, and frequency, for each class interval;
+3.2.4.3. System asks user either to ‘Continue’ or to ‘Edit’ specific class interval entry(ies);
+3.2.4.4. If user opts to ‘Continue’;
+3.2.4.4.1. Program asks user to input what measures of central tendency to calculate. User choices are: a) Mean, b) Median, c) Mode, or d) all measures;
+3.2.4.4.1.1. The ‘Mean’ and ‘Median’ cannot be calculated for grouped data with open-ended class interval(s). Hence, system displays a notification to the user;
+3.2.4.4.1.2. 1 modal class – “unimodal”;
+3.2.4.4.1.3. 2 modal classes – “bimodal”;
+3.2.4.4.1.4. ≥ 3 modal classes – “multimodal”;
+3.2.4.4.1.5. No modal class – “no mode”;
+3.2.4.5. Else ‘Edit’, system performs edit(s) in specified class interval(s);
+3.3. Program asks the user to input the interpretation for the output presented in #3.1.3.1, #3.2.3.3.2, or 3.2.4.4.1;
+3.4. Then, program asks user whether to execute another run (using the same data – proceed either to #3.1.3.1, #3.2.3.3.2, or 3.2.4.4.1), or input a new dataset – proceed to #1).
+
+
+NOTES:	Implementation of error-catching or user-validation feature(s) is a given as well as ‘proper’ formatting in user’s input and output, i.e. visually appealing.
+
