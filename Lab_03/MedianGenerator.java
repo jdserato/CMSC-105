@@ -20,10 +20,21 @@ public class MedianGenerator {
             added = false;
 
             for (int i = 0; i < sorted.size(); i++){
-                if (d <= sorted.get(i)){
-                    sorted.add(i-1, d);
+                if (sorted.size() == 0){
+                    sorted.add(d);
                     added = true;
                     break;
+                }
+                if (d < sorted.get(i)){
+                    if(i == 0){
+                        sorted.add(0,d);
+                        added = true;
+                        break;
+                    }else{
+                        sorted.add(i, d);
+                        added = true;
+                        break;
+                    }
                 }
             }
             if (added == false){
