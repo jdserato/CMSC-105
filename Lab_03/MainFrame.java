@@ -1,8 +1,12 @@
 package Lab03;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import static java.awt.event.KeyEvent.VK_ENTER;
@@ -33,8 +37,15 @@ public class MainFrame extends JFrame {
     private JLabel lNum;
     private JButton btnDone;
     private JPanel panel5;
-    private JPanel UngroupedPanel;
-    private JPanel GroupedPanel;
+    private JPanel pnlUngrouped;
+    private JPanel pnlGrouped;
+    private JTextField tfIntervals;
+    private JCheckBox cbFirstOpen;
+    private JCheckBox cblastOpen;
+    private JButton btnOK4;
+    private JPanel panel6;
+    private JLabel lInterval;
+    private JTable tblUngroup;
     private int index = 1;
     private int size;
     private ArrayList<String> list;
@@ -53,6 +64,12 @@ public class MainFrame extends JFrame {
         panel3.setVisible(false);
         panel4.setVisible(false);
         panel5.setVisible(false);
+        for (Component c : panel.getComponents()) {
+            if (c instanceof Panel) {
+                c.setVisible(false);
+            }
+        }
+        panel1.setVisible(true);
         setTitle(taMenuHeader.getText());
         setVisible(true);
         setSize(625, 450);
@@ -78,10 +95,16 @@ public class MainFrame extends JFrame {
         askTitle();
 
         btnOK2.addActionListener(e -> {
+            System.out.println("TRIGG");
             if (tfTitle.getText().equals("")) {
                 JOptionPane.showMessageDialog(panel, "Please enter title.", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                refocus(panel2, panel3);
+                if (rbGrouped.isSelected()) {
+                    refocus(panel2, pnlGrouped);
+                    pnlGrouped.setVisible(true);
+                } else {
+                    refocus(panel2, pnlUngrouped);
+                }
             }
         });
 
@@ -97,7 +120,15 @@ public class MainFrame extends JFrame {
                     if (tfTitle.getText().equals("")) {
                         JOptionPane.showMessageDialog(panel, "Please enter title.", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        refocus(panel2, panel3);
+                        if (rbGrouped.isSelected()) {
+                            refocus(panel2, pnlGrouped);
+                            pnlGrouped.setVisible(true);
+                        } else {
+                            refocus(panel2, pnlUngrouped);
+                            pnlUngrouped.setVisible(true);
+                            panel3.setVisible(true);
+                        }
+                        System.out.println("ACTIVATED");
                     }
                 }
             }
@@ -109,7 +140,13 @@ public class MainFrame extends JFrame {
         });
 
         if (rbUngrouped.isSelected()) {
+            askSize();
+        } else {
+            askInterval();
+        }
 
+        if (rbUngrouped.isSelected()) { // Ungrouped Data
+            panel3.setVisible(true);
             btnOK3.setEnabled(false);
             askSize();
 
@@ -120,8 +157,8 @@ public class MainFrame extends JFrame {
                 } catch (NumberFormatException e1) {
                     error = true;
                 }
-                if (error || size <= 0) {
-                    JOptionPane.showMessageDialog(panel, "Size must be positive integer.", "Error", JOptionPane.ERROR_MESSAGE);
+                if (error || size <= 1) {
+                    JOptionPane.showMessageDialog(panel, "Size must be greater than 1.", "Error", JOptionPane.ERROR_MESSAGE);
                     tfSize.setText("");
                 } else {
                     refocus(panel3, panel4);
@@ -178,37 +215,32 @@ public class MainFrame extends JFrame {
                             if (str.charAt(0) == '\n' || str.charAt(0) == '\t') {
                                 str = str.substring(1, str.length());
                             }
-                            if (rbGrouped.isSelected()) {
-                                list.add(str);
-                                askData();
-                            } else {
-                                try {
-                                    if (index == 1) {
-                                        try {
-                                            Double.parseDouble(str);
-                                            integer = !str.contains(".");
-                                            error = false;
-                                        } catch (NumberFormatException e2) {
-                                            JOptionPane.showMessageDialog(panel, "Please enter a numerical value.", "Error", JOptionPane.ERROR_MESSAGE);
-                                            error = true;
-                                        }
+                            try {
+                                if (index == 1) {
+                                    try {
+                                        Double.parseDouble(str);
+                                        integer = !str.contains(".");
+                                        error = false;
+                                    } catch (NumberFormatException e2) {
+                                        JOptionPane.showMessageDialog(panel, "Please enter a numerical value.", "Error", JOptionPane.ERROR_MESSAGE);
+                                        error = true;
                                     }
-                                    if (!error) {
-                                        if (integer) {
-                                            int d = Integer.parseInt(str);
-                                            list.add(d + "");
-                                        } else {
-                                            double d = Double.parseDouble(str);
-                                            list.add(d + "");
-                                        }
-                                        askData();
-                                    }
-                                } catch (NumberFormatException e2) {
+                                }
+                                if (!error) {
                                     if (integer) {
-                                        JOptionPane.showMessageDialog(panel, "Please input an integer.", "Error", JOptionPane.ERROR_MESSAGE);
+                                        int d = Integer.parseInt(str);
+                                        list.add(d + "");
                                     } else {
-                                        JOptionPane.showMessageDialog(panel, "Please input a floating number.", "Error", JOptionPane.ERROR_MESSAGE);
+                                        double d = Double.parseDouble(str);
+                                        list.add(d + "");
                                     }
+                                    askData();
+                                }
+                            } catch (NumberFormatException e2) {
+                                if (integer) {
+                                    JOptionPane.showMessageDialog(panel, "Please input an integer.", "Error", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    JOptionPane.showMessageDialog(panel, "Please input a floating number.", "Error", JOptionPane.ERROR_MESSAGE);
                                 }
                             }
                             taData.setText("");
@@ -224,46 +256,60 @@ public class MainFrame extends JFrame {
 
                 }
             });
-        } else {
 
-        }
+            btnDone.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    for (Component c : getComponents()) {
+                        c.setVisible(false);
+                    }
+                    panel1.setVisible(true);
+                    btnOK1.setEnabled(false);
+                    panel1.setEnabled(true);
+                    panel2.setVisible(false);
+                    panel3.setVisible(false);
+                    panel4.setVisible(false);
+                    panel5.setVisible(false);
+                    panel1.setEnabled(false);
+                    index = 1;
+                    lNum.setText("1.");
+                    size = 0;
+                    integer = false;
+                    error = false;
 
-        btnDone.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                panel1.setVisible(true);
-                btnOK1.setEnabled(false);
-                panel1.setEnabled(true);
-                panel2.setVisible(false);
-                panel3.setVisible(false);
-                panel4.setVisible(false);
-                panel5.setVisible(false);
-                panel1.setEnabled(false);
-                index = 1;
-                lNum.setText("1.");
-                size = 0;
-                integer = false;
-                error = false;
+                    new Editing(list, tfTitle.getText());
+                    list = new ArrayList<>();
 
-                /*new ViewSample(list, tfTitle.getText(), rbGrouped.isSelected());
-                list = new ArrayList<>();
-
-                for (Component c : panel.getComponents()) {
-                    if (c instanceof JPanel) {
-                        for (Component c1 : ((JPanel) c).getComponents()) {
-                            c1.setEnabled(true);
+                    for (Component c : panel.getComponents()) {
+                        if (c instanceof JPanel) {
+                            for (Component c1 : ((JPanel) c).getComponents()) {
+                                c1.setEnabled(true);
+                            }
                         }
                     }
-                }*/
-                rbGrouped.setSelected(false);
-                rbUngrouped.setSelected(false);
-                tfSize.setText("");
-                tfTitle.setText("");
-                taData.setText("");
-                Semora.in.setEnabled(false);
-                //SeratoAndAmora.in.setFocusable(false);
+                    tfSize.setText("");
+                    tfTitle.setText("");
+                    taData.setText("");
+                    Semora.in.setEnabled(false);
+                }
+            });
+        } else { // Grouped Data
+
+        }
+    }
+
+    private void askInterval() {
+        while (true) {
+            try {
+                wait();
+            } catch (InterruptedException | IllegalMonitorStateException e) {
+                // do nothing
             }
-        });
+            if (!tfIntervals.getText().equals("")) {
+                btnOK4.setEnabled(true);
+                break;
+            }
+        }
     }
 
     private void askSize() {
@@ -321,6 +367,24 @@ public class MainFrame extends JFrame {
             refocus(panel4, panel5);
         } else {
             lNum.setText(index + ". ");
+        }
+    }
+
+    private void createUIComponents() {
+        tblUngroup = new JTable();
+
+        int rows = (int) Math.ceil(Math.sqrt(list.size()));
+        int cols = rows;
+        if (rows * (rows - 1) >= list.size()) {
+            cols--;
+        }
+        tblUngroup.setModel(new DefaultTableModel(rows, cols));
+        for (int i = 0; i < tblUngroup.getRowCount(); i++) {
+            for (int j = 0; j < tblUngroup.getColumnCount(); j++) {
+                if ((i * cols) + j < list.size()) {
+                    tblUngroup.setValueAt(list.get((i * cols) + j), i , j);
+                }
+            }
         }
     }
 }
