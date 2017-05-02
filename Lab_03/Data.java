@@ -5,9 +5,9 @@ package Lab03;
  */
 public class Data {
     private String name;
-    private int count;
+    private double count;
 
-    public Data(String name, int count) {
+    public Data(String name, double count) {
         this.name = name;
         this.count = count;
     }
@@ -24,7 +24,7 @@ public class Data {
         this.name = name;
     }
 
-    public int getCount() {
+    public double getCount() {
         return count;
     }
 
