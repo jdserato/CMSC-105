@@ -1,24 +1,88 @@
 package Lab01;
 
+import java.util.Random;
 import java.util.ArrayList;
 import java.lang.*;
-import java.util.Scanner;
+import java.util.LinkedList;
 
 /**
  * Created by Serato & Amora on 2/26/2017
  */
-public class StratifiedSampling extends Sampling{
+public class StratifiedSampling{
 
-    private ArrayList<String> sample = new ArrayList<>();
-    private ArrayList<String> indices = new ArrayList<>();
+    private double percentage;
     private ArrayList<String> unique = new ArrayList<>();
-    private ArrayList<String> population = new ArrayList<>();
+    private ArrayList<StratifiedSampleData> sample = new ArrayList<>();
+    private ArrayList<String> sampleFrame = new ArrayList<>();
+    private LinkedList<ArrayList<Integer>> indicesFinal = new LinkedList<>();
 
     StratifiedSampling(ArrayList<String> sampleFrame) {
-        super(sampleFrame, "STRATIFIED SAMPLE");
+        this.sampleFrame = sampleFrame;
+    }
+
+    public Integer generateRandomNumber(int min, int max){
+        Random rand = new Random();
+        return rand.nextInt(max) + min;
+    }
+
+    public void getUnique(){
+        ArrayList<String> uniqueVariables = new ArrayList<>();
+            for (String var: sampleFrame){
+                if (!uniqueVariables.contains(var)){
+                    uniqueVariables.add(var);
+                }
+            }
+        unique = uniqueVariables;
+    }
+
+    public void getIndices(){
+
+        LinkedList<ArrayList<Integer>> indices = new LinkedList<>();
+
+        for (String uniqueVar: unique){
+            ArrayList<Integer> forEach = new ArrayList<>();
+            for (int i = 0; i < sampleFrame.size(); i++){
+                if (sampleFrame.get(i).equals(uniqueVar)){
+                    forEach.add(i);
+                }
+            }
+            indices.add(forEach);
+        }
+        indicesFinal = indices;
+    }
+
+    public void processSampling(){
+        int uniqueCounter = 0;
+
+        for (ArrayList<Integer> indices: indicesFinal){
+            ArrayList<Integer> temporaryIndices = new ArrayList<>();
+            int sampleSizeForEach = (int)Math.ceil(percentage * indices.size());
+            while (temporaryIndices.size() < sampleSizeForEach){
+                int randomNum = generateRandomNumber(0,indices.size()-1);
+                if (temporaryIndices.contains(randomNum)){
+                    temporaryIndices.add(randomNum);
+                }
+            }
+            StratifiedSampleData toAdd = new StratifiedSampleData(unique.get(uniqueCounter),temporaryIndices);
+            sample.add(toAdd);
+            uniqueCounter++;
+        }
     }
 
 
+    public ArrayList<StratifiedSampleData> getSample(double percentage) {
+        this.percentage = percentage;
+        ArrayList<String> unique = new ArrayList<>();
+        getUnique();
+        getIndices();
+        processSampling();
+        return sample;
+    }
+
+
+
+
+    /*
     @Override
     public ArrayList<String> getSample(int sampleSize) {
 
@@ -92,4 +156,5 @@ public class StratifiedSampling extends Sampling{
 
         return sample;
     }
+    */
 }
